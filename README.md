@@ -84,4 +84,3 @@ Interested in a sublicense agreement for use of NodeBB in a non-free/restrictive
 
 ## Group members
 Aisha Al Attiyah, Ahmad Al-Obaidan, Fatou Gueye, Latifa Al Hitmi, Mohamed Elzeni
-## More Information/Links
