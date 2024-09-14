@@ -83,35 +83,50 @@ Notifications.getMultiple = async function (nids) {
 
 	const userKeys = notifications.map(n => n && n.from);
 	const usersData = await User.getUsersFields(userKeys, ['username', 'userslug', 'picture']);
-
-	notifications.forEach((notification, index) => {
-		if (notification) {
-			intFields.forEach((field) => {
-				if (notification.hasOwnProperty(field)) {
-					notification[field] = parseInt(notification[field], 10) || 0;
-				}
-			});
-			if (notification.path && !notification.path.startsWith('http')) {
-				notification.path = nconf.get('relative_path') + notification.path;
-			}
-			notification.datetimeISO = utils.toISOString(notification.datetime);
-
-			if (notification.bodyLong) {
-				notification.bodyLong = utils.stripHTMLTags(notification.bodyLong, ['img', 'p', 'a']);
-			}
-
-			notification.user = usersData[index];
-			if (notification.user && notification.from) {
-				notification.image = notification.user.picture || null;
-				if (notification.user.username === '[[global:guest]]') {
-					notification.bodyShort = notification.bodyShort.replace(/([\s\S]*?),[\s\S]*?,([\s\S]*?)/, '$1, [[global:guest]], $2');
-				}
-			} else if (notification.image === 'brand:logo' || !notification.image) {
-				notification.image = meta.config['brand:logo'] || `${nconf.get('relative_path')}/logo.png`;
-			}
+	// fixing function to refactor
+	function processNotification(notification, index, usersData) {
+		if (!notification) {
+			return;
 		}
+		parseIntFields(notification);
+		processNotificationPath(notification);
+		notification.datetimeISO = utils.toISOString(notification.datetime);
+		processNotificationBody(notification);
+		notification.user = usersData[index];
+		processNotificationImage(notification);
+	}
+	function parseIntFields(notification) {
+		intFields.forEach((field) => {
+			if (notification.hasOwnProperty(field)) {
+				notification[field] = parseInt(notification[field], 10) || 0;
+			}
+		});
+	}
+	function processNotificationPath(notification) {
+		if (notification.path && !notification.path.startsWith('http')) {
+			notification.path = nconf.get('relative_path') + notification.path;
+		}
+	}
+	function processNotificationBody(notification) {
+		if (notification.bodyLong) {
+			notification.bodyLong = utils.stripHTMLTags(notification.bodyLong, ['img', 'p', 'a']);
+		}
+	}
+	function processNotificationImage(notification) {
+		if (notification.user && notification.from) {
+			notification.image = notification.user.picture || null;
+			if (notification.user.username === '[[global:guest]]') {
+				notification.bodyShort = notification.bodyShort.replace(/([\s\S]*?),[\s\S]*?,([\s\S]*?)/, '$1, [[global:guest]], $2');
+			}
+		} else if (notification.image === 'brand:logo' || !notification.image) {
+			notification.image = meta.config['brand:logo'] || `${nconf.get('relative_path')}/logo.png`;
+		}
+	}
+	notifications.forEach((notification, index) => {
+		processNotification(notification, index, usersData);
 	});
 	return notifications;
+	// We end the function here
 };
 
 Notifications.filterExists = async function (nids) {
@@ -427,7 +442,7 @@ Notifications.merge = async function (notifications) {
 
 			return cur;
 		}, []);
-
+		// function to refactor
 		differentiators.forEach((differentiator) => {
 			function typeFromLength(items) {
 				if (items.length === 2) {
@@ -443,7 +458,6 @@ Notifications.merge = async function (notifications) {
 			} else {
 				set = isolated.filter(n => n.mergeId === (`${mergeId}|${differentiator}`));
 			}
-
 			const modifyIndex = notifications.indexOf(set[0]);
 			if (modifyIndex === -1 || set.length === 1) {
 				return notifications;
@@ -458,15 +472,22 @@ Notifications.merge = async function (notifications) {
 						`[[notifications:new-messages-from, ${set.length}, ${user.displayname}]]`;
 					break;
 				}
-
 				case 'notifications:user-posted-in-public-room': {
-					const usernames = _.uniq(set.map(notifObj => notifObj && notifObj.user && notifObj.user.displayname));
+					const usernames = _.uniq(
+						set
+							.map((notifObj) => {
+								if (notifObj && notifObj.user) {
+									return notifObj.user.displayname;
+								}
+								return null;
+							})
+							.filter(Boolean)
+					);
 					if (usernames.length === 2 || usernames.length === 3) {
 						notifObj.bodyShort = `[[${mergeId}-${typeFromLength(usernames)}, ${usernames.join(', ')}, ${notifObj.roomIcon}, ${notifObj.roomName}]]`;
 					} else if (usernames.length > 3) {
 						notifObj.bodyShort = `[[${mergeId}-${typeFromLength(usernames)}, ${usernames.slice(0, 2).join(', ')}, ${usernames.length - 2}, ${notifObj.roomIcon}, ${notifObj.roomName}]]`;
 					}
-
 					notifObj.path = set[set.length - 1].path;
 					break;
 				}
@@ -475,38 +496,40 @@ Notifications.merge = async function (notifications) {
 				case 'notifications:user-posted-to':
 				case 'notifications:user-flagged-post-in':
 				case 'notifications:user-flagged-user': {
-					const usernames = _.uniq(set.map(notifObj => notifObj && notifObj.user && notifObj.user.username));
+					const usernames = _.uniq(
+						set.map((notifObj) => {
+							if (notifObj && notifObj.user) {
+								return notifObj.user.username;
+							}
+							return null;
+						}).filter(Boolean)
+					);
 					const numUsers = usernames.length;
-
 					const title = utils.decodeHTMLEntities(notifications[modifyIndex].topicTitle || '');
 					let titleEscaped = title.replace(/%/g, '&#37;').replace(/,/g, '&#44;');
-					titleEscaped = titleEscaped ? (`, ${titleEscaped}`) : '';
-
+					titleEscaped = titleEscaped ? `, ${titleEscaped}` : '';
 					if (numUsers === 2 || numUsers === 3) {
 						notifications[modifyIndex].bodyShort = `[[${mergeId}-${typeFromLength(usernames)}, ${usernames.join(', ')}${titleEscaped}]]`;
 					} else if (numUsers > 2) {
 						notifications[modifyIndex].bodyShort = `[[${mergeId}-${typeFromLength(usernames)}, ${usernames.slice(0, 2).join(', ')}, ${numUsers - 2}${titleEscaped}]]`;
 					}
-
 					notifications[modifyIndex].path = set[set.length - 1].path;
-				} break;
-
+					break;
+				}
 				case 'new-register':
 					notifications[modifyIndex].bodyShort = `[[notifications:${mergeId}-multiple, ${set.length}]]`;
 					break;
 			}
-
 			// Filter out duplicates
 			notifications = notifications.filter((notifObj, idx) => {
 				if (!notifObj || !notifObj.mergeId) {
 					return true;
 				}
-
 				return !(notifObj.mergeId === (mergeId + (differentiator ? `|${differentiator}` : '')) && idx !== modifyIndex);
 			});
 		});
-
 		return notifications;
+	// function ends here
 	}, notifications);
 
 	const data = await plugins.hooks.fire('filter:notifications.merge', {
