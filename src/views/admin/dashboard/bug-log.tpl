@@ -18,14 +18,15 @@
       </tr>
     </thead>
     <tbody>
-      {{#each bugs}}
+      <!-- Use Benchpress syntax for iteration -->
+      <!-- BEGIN bugs -->
       <tr>
-        <td>{{this.title}}</td>
-        <td>{{this.description}}</td>
-        <td>{{this.status}}</td>
-        <td>{{this.timestamp}}</td>
+        <td><!-- IMPORT bugs.title --></td>
+        <td><!-- IMPORT bugs.description --></td>
+        <td><!-- IMPORT bugs.status --></td>
+        <td><!-- IMPORT bugs.timestamp --></td>
       </tr>
-      {{/each}}
+      <!-- END bugs -->
     </tbody>
   </table>
 </body>
