@@ -97,11 +97,11 @@ module.exports = function (Categories) {
 
 		cache.del('categories:cid');
 		await clearParentCategoryCache(parentCid);
-
-		if (data.cloneFromCid && parseInt(data.cloneFromCid, 10)) {
-			category = await Categories.copySettingsFrom(data.cloneFromCid, category.cid, !data.parentCid);
+		console.log('Latifa : Refactored code executed');
+		const cloneFromCid = parseInt(data.cloneFromCid, 10);
+		if (cloneFromCid) {
+			category = await Categories.copySettingsFrom(cloneFromCid, category.cid, !data.parentCid);
 		}
-
 		if (data.cloneChildren) {
 			await duplicateCategoriesChildren(category.cid, data.cloneFromCid, data.uid);
 		}
