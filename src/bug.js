@@ -1,6 +1,6 @@
 'use strict';
 
-const { promisify } = require('util');
+// const { promisify } = require('util');
 const async = require('async');
 const db = require('./database');
 
