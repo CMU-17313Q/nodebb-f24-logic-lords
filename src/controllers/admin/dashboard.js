@@ -15,7 +15,7 @@ const user = require('../../user');
 const topics = require('../../topics');
 const utils = require('../../utils');
 const emailer = require('../../emailer');
-const Bug = require('../src/bug'); // Import the Bug model
+const Bug = require('../../bug'); // Import the Bug model
 
 const dashboardController = module.exports;
 
@@ -46,13 +46,15 @@ dashboardController.get = async function (req, res) {
 };
 
 dashboardController.getBugLog = async (req, res) => {
-	try {
-	  const bugs = await Bug.find();
-	  res.render('admin/bug-log', { bugs });
-	} catch (error) {
-	  	res.status(500).json({ error: 'An error occurred while fetching the bug log' });
-	}
+    try {
+      const bugs = await Bug.getAll();
+      res.render('admin/bug-log', { bugs });
+    } catch (error) {
+      	res.status(500).json({ error: 'An error occurred while fetching the bug log' });
+    }
 };
+
+module.exports = dashboardController;
 
 async function getNotices() {
 	const notices = [
