@@ -15,7 +15,7 @@ const user = require('../../user');
 const topics = require('../../topics');
 const utils = require('../../utils');
 const emailer = require('../../emailer');
-const Bug = require('../models/bugModel'); // Import the Bug model
+const Bug = require('../src/bug'); // Import the Bug model
 
 const dashboardController = module.exports;
 
