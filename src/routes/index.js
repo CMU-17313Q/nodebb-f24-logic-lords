@@ -9,7 +9,7 @@ const meta = require('../meta');
 const controllers = require('../controllers');
 const controllerHelpers = require('../controllers/helpers');
 const plugins = require('../plugins');
-
+const bugReportController = require('../controllers/bugReports');
 const authRoutes = require('./authentication');
 const writeRoutes = require('./write');
 const helpers = require('./helpers');
@@ -220,3 +220,6 @@ function addRemountableRoutes(app, router, middleware, mounts) {
 		_mounts[original](router, mount, middleware, controllers);
 	});
 }
+_mounts.reportBug = (app, middleware, controllers) => {
+	setupPageRoute(app, '/report-bug', [], controllers.bugReports.getBugReportForm);
+};
