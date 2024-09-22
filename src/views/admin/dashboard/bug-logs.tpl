@@ -1,4 +1,4 @@
-<!-- views/admin/bug-log.tpl -->
+<!-- views/admin/bug-logs.tpl -->
 <!DOCTYPE html>
 <html lang="en">
 <head>

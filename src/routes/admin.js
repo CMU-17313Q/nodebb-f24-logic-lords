@@ -12,7 +12,7 @@ module.exports = function (app, name, middleware, controllers) {
 	helpers.setupAdminPageRoute(app, `/${name}/dashboard/users`, middlewares, controllers.admin.dashboard.getUsers);
 	helpers.setupAdminPageRoute(app, `/${name}/dashboard/topics`, middlewares, controllers.admin.dashboard.getTopics);
 	helpers.setupAdminPageRoute(app, `/${name}/dashboard/searches`, middlewares, controllers.admin.dashboard.getSearches);
-	helpers.setupAdminPageRoute(app, `/${name}/dashboard/bug-log`, middlewares, controllers.admin.dashboard.getBugLog); // New route for bug log
+	helpers.setupAdminPageRoute(app, `/${name}/dashboard/bug-logs`, middlewares, controllers.admin.dashboard.getBugLogs);
 
 	helpers.setupAdminPageRoute(app, `/${name}/manage/categories`, middlewares, controllers.admin.categories.getAll);
 	helpers.setupAdminPageRoute(app, `/${name}/manage/categories/:category_id`, middlewares, controllers.admin.categories.get);
@@ -59,6 +59,7 @@ module.exports = function (app, name, middleware, controllers) {
 
 	apiRoutes(app, name, middleware, controllers);
 };
+
 
 function apiRoutes(router, name, middleware, controllers) {
 	router.get(`/api/${name}/config`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.getConfig));
