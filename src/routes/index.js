@@ -221,4 +221,4 @@ function addRemountableRoutes(app, router, middleware, mounts) {
 
 		_mounts[original](router, mount, middleware, controllers);
 	});
-};
+}
