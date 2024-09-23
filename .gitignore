@@ -24,6 +24,7 @@ feeds/recent.rss
 logs/
 
 pidfile
+dump.rdb
 
 # templates
 /public/templates
