@@ -5,7 +5,6 @@ const winston = require('winston');
 const path = require('path');
 const express = require('express');
 
-const { set } = require('grunt');
 const meta = require('../meta');
 const controllers = require('../controllers');
 const controllerHelpers = require('../controllers/helpers');
