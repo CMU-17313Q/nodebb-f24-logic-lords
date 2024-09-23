@@ -19,11 +19,13 @@
         h1 {
             text-align: center;
             color: #333;
+            font-weight: bold;
         }
         label {
             display: block;
             margin-bottom: 8px;
             color: #555;
+            font-weight: bold
         }
         input[type="text"],
         input[type="email"],
@@ -54,6 +56,7 @@
             margin-left: auto;
             margin-right: auto;
             display: block;
+            font-weight: bold
         }
         input[type="submit"]:hover {
             background-color: #218838;
