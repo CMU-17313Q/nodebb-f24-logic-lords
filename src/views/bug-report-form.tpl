@@ -17,16 +17,6 @@
         <label for="bug-description">Bug Description:</label><br>
         <textarea id="bug-description" name="bug-description" rows="4" cols="50" required></textarea><br><br>
 
-        <label for="steps-to-reproduce">Steps to Reproduce:</label><br>
-        <textarea id="steps-to-reproduce" name="steps-to-reproduce" rows="4" cols="50" required></textarea><br><br>
-
-        <label for="severity">Severity:</label><br>
-        <select id="severity" name="severity" required>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select><br><br>
-
         <input type="submit" value="Submit">
     </form>
 </body>
