@@ -328,3 +328,6 @@ paths:
     $ref: 'read/groups/slug/members.yaml'
   /api/outgoing:
     $ref: 'read/outgoing.yaml'
+  /api/admin/dashboard/bug-logs:
+    $ref: 'read/admin/dashboard/bug-logs.yaml'
+    
