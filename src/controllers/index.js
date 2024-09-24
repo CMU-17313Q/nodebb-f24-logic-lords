@@ -11,6 +11,7 @@ const helpers = require('./helpers');
 
 const Controllers = module.exports;
 
+
 Controllers.ping = require('./ping');
 Controllers.home = require('./home');
 Controllers.topics = require('./topics');
@@ -37,6 +38,7 @@ Controllers.osd = require('./osd');
 Controllers['404'] = require('./404');
 Controllers.errors = require('./errors');
 Controllers.composer = require('./composer');
+Controllers['report-bug'] = require('./reportBug');
 
 Controllers.write = require('./write');
 
@@ -361,5 +363,11 @@ Controllers.termsOfUse = async function (req, res, next) {
 	});
 	res.render('tos', {
 		termsOfUse: termsOfUse.postData.content,
+	});
+};
+
+Controllers.reportBug = async function (req, res) {
+	res.render('bug-report-form', {
+		title: 'Report a Bug',
 	});
 };
