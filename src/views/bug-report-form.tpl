@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bug Report Form</title>
     <style>
-    
         .container {
             background-color: #fff;
             padding: 20px;
@@ -25,7 +24,7 @@
             display: block;
             margin-bottom: 8px;
             color: #555;
-            font-weight: bold
+            font-weight: bold;
         }
         input[type="text"],
         input[type="email"],
@@ -56,28 +55,59 @@
             margin-left: auto;
             margin-right: auto;
             display: block;
-            font-weight: bold
+            font-weight: bold;
         }
         input[type="submit"]:hover {
             background-color: #218838;
         }
+        .banner {
+            text-align: center;
+            color: #fff;
+            background-color: rgba(40, 167, 69, 0.9); /* Slightly transparent */
+            padding: 10px;
+            position: fixed;
+            bottom: -50px; /* Start off-screen */
+            left: 0;
+            right: 0;
+            display: none;
+            z-index: 1000;
+            transition: bottom 0.5s ease-in-out; /* Smooth transition */
+        }
+        .banner.show {
+            bottom: 0; /* Slide in */
+        }
     </style>
 </head>
 <body>
+    <div class="banner" id="form-banner">Form Submitted</div>
     <div class="container">
         <h1>Bug Report Form</h1>
-        <form action="/submit-bug-report" method="post">
-            <label for="name" style="padding-left: 20px;">Name:</label>
+        <form id="bug-report-form">
+            <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
 
-            <label for="email" style="padding-left: 20px;">Email:</label>
+            <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
 
-            <label for="bug-description" style="padding-left: 20px;">Bug Description:</label>
+            <label for="bug-description">Bug Description:</label>
             <textarea id="bug-description" name="bug-description" rows="4" required></textarea>
 
             <input type="submit" value="Submit">
         </form>
     </div>
+    <script>
+        document.getElementById('bug-report-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+            const banner = document.getElementById('form-banner');
+            banner.style.display = 'block'; // Show the banner
+            banner.classList.add('show'); // Add the class to slide in the banner
+            setTimeout(() => {
+                banner.classList.remove('show'); // Remove the class to slide out the banner
+                setTimeout(() => {
+                    banner.style.display = 'none'; // Hide the banner after the slide out
+                }, 500); // Match the transition duration
+            }, 3000); // Display the banner for 3 seconds
+        });
+    </script>
 </body>
 </html>
