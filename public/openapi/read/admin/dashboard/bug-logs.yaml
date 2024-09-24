@@ -1,20 +1,17 @@
-paths:
-  /api/admin/dashboard/bug-logs:
-    get:
-      summary: Retrieve bug logs
-      description: Returns all bug logs from the system that the user has access to
-      responses:
-        '200':
-          description: A list of bug logs
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '../../../components/schemas/BugLogObject.yaml#/BugLogObject'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-
-          
+get:
+  summary: Retrieve bug logs
+  description: Returns all bug logs from the system that the user has access to
+  responses:
+    '200':
+      description: A list of bug logs
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '../../../components/schemas/BugLogObject.yaml#/BugLogObject'
+    '400':
+      description: Bad request
+    '500':
+      description: Internal server error
+      
