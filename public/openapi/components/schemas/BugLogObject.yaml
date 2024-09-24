@@ -1,0 +1,17 @@
+BugLogObject:
+  type: object
+  properties:
+    id:
+      type: string
+      description: The unique identifier for the bug log
+    description:
+      type: string
+      description: A detailed description of the bug
+    status:
+      type: string
+      description: The current status of the bug (e.g., open, closed)
+    createdAt:
+      type: string
+      format: date-time
+      description: The timestamp when the bug was created
+      
