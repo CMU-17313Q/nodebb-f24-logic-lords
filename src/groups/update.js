@@ -14,24 +14,52 @@ const cache = require('../cache');
 
 module.exports = function (Groups) {
 	Groups.update = async function (groupName, values) {
+		await validateGroupExists(groupName);
+
+		values = await applyPluginFilters(groupName, values);
+
+		// Cast some values as bool (if not boolean already)
+		// 'true' and '1' = true, everything else false
+		values = castBooleanValues(values);
+
+		const payload = createPayload(values);
+
+		await handleSpecialProperties(groupName, values, payload);
+
+		await db.setObject(`group:${groupName}`, payload);
+		await Groups.renameGroup(groupName, values.name);
+
+		plugins.hooks.fire('action:group.update', {
+			name: groupName,
+			values: values,
+		});
+	};
+
+	async function validateGroupExists(groupName) {
 		const exists = await db.exists(`group:${groupName}`);
 		if (!exists) {
 			throw new Error('[[error:no-group]]');
 		}
+	}
 
-		({ values } = await plugins.hooks.fire('filter:group.update', {
+	async function applyPluginFilters(groupName, values) {
+		const result = await plugins.hooks.fire('filter:group.update', {
 			groupName: groupName,
 			values: values,
-		}));
+		});
+		return result.values;
+	}
 
-		// Cast some values as bool (if not boolean already)
-		// 'true' and '1' = true, everything else false
+	function castBooleanValues(values) {
 		['userTitleEnabled', 'private', 'hidden', 'disableJoinRequests', 'disableLeave'].forEach((prop) => {
 			if (values.hasOwnProperty(prop) && typeof values[prop] !== 'boolean') {
 				values[prop] = values[prop] === 'true' || parseInt(values[prop], 10) === 1;
 			}
 		});
+		return values;
+	}
 
+	function createPayload(values) {
 		const payload = {
 			description: values.description || '',
 			icon: values.icon || '',
@@ -39,30 +67,29 @@ module.exports = function (Groups) {
 			textColor: values.textColor || '#ffffff',
 		};
 
+		const booleanFields = [
+			'userTitleEnabled',
+			'hidden',
+			'private',
+			'disableJoinRequests',
+			'disableLeave',
+		];
+
+		booleanFields.forEach((field) => {
+			if (values.hasOwnProperty(field)) {
+				payload[field] = values[field] ? '1' : '0';
+			}
+		});
+
 		if (values.hasOwnProperty('userTitle')) {
 			payload.userTitle = values.userTitle || '';
 		}
 
-		if (values.hasOwnProperty('userTitleEnabled')) {
-			payload.userTitleEnabled = values.userTitleEnabled ? '1' : '0';
-		}
+		return payload;
+	}
 
-		if (values.hasOwnProperty('hidden')) {
-			payload.hidden = values.hidden ? '1' : '0';
-		}
 
-		if (values.hasOwnProperty('private')) {
-			payload.private = values.private ? '1' : '0';
-		}
-
-		if (values.hasOwnProperty('disableJoinRequests')) {
-			payload.disableJoinRequests = values.disableJoinRequests ? '1' : '0';
-		}
-
-		if (values.hasOwnProperty('disableLeave')) {
-			payload.disableLeave = values.disableLeave ? '1' : '0';
-		}
-
+	async function handleSpecialProperties(groupName, values, payload) {
 		if (values.hasOwnProperty('name')) {
 			await checkNameChange(groupName, values.name);
 		}
@@ -80,15 +107,7 @@ module.exports = function (Groups) {
 			const cidsArray = values.memberPostCids.split(',').map(cid => parseInt(cid.trim(), 10)).filter(Boolean);
 			payload.memberPostCids = cidsArray.filter(cid => validCids.includes(cid)).join(',') || '';
 		}
-
-		await db.setObject(`group:${groupName}`, payload);
-		await Groups.renameGroup(groupName, values.name);
-
-		plugins.hooks.fire('action:group.update', {
-			name: groupName,
-			values: values,
-		});
-	};
+	}
 
 	async function updateVisibility(groupName, hidden) {
 		if (hidden) {
