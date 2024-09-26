@@ -21,7 +21,6 @@ const relative_path = nconf.get('relative_path');
 const url = nconf.get('url');
 
 const handleSuccessfulResponse = (statusCode, res, payload) => {
-	console.log('Aisha');
 	if (res.req.loggedIn) {
 		res.set('cache-control', 'private');
 	}
