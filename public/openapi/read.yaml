@@ -328,3 +328,12 @@ paths:
     $ref: 'read/groups/slug/members.yaml'
   /api/outgoing:
     $ref: 'read/outgoing.yaml'
+  /api/report-bug:
+    get:
+      summary: Report a bug
+      description: Endpoint to report a bug
+      responses:
+        '200':
+          description: Bug reported successfully
+        '400':
+          description: Bad request
