@@ -389,3 +389,7 @@ dashboardController.getSearches = async (req, res) => {
 		endDate: req.query.end ? validator.escape(String(req.query.end)) : null,
 	});
 };
+
+dashboardController.getBugLogs = async function (req, res) {
+	res.render('admin/dashboard/bug-logs', {});
+};
