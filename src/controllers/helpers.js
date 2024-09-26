@@ -20,6 +20,32 @@ const helpers = module.exports;
 const relative_path = nconf.get('relative_path');
 const url = nconf.get('url');
 
+const handleSuccessfulResponse = (statusCode, res, payload) => {
+	console.log('Aisha');
+	if (res.req.loggedIn) {
+		res.set('cache-control', 'private');
+	}
+
+	let code = 'ok';
+	let message = 'OK';
+	switch (statusCode) {
+		case 202:
+			code = 'accepted';
+			message = 'Accepted';
+			break;
+
+		case 204:
+			code = 'no-content';
+			message = 'No Content';
+			break;
+	}
+
+	res.status(statusCode).json({
+		status: { code, message },
+		response: payload || {},
+	});
+};
+
 helpers.noScriptErrors = async function (req, res, error, httpStatus) {
 	if (req.body.noscript !== 'true') {
 		if (typeof error === 'string') {
@@ -454,28 +480,7 @@ helpers.formatApiResponse = async (statusCode, res, payload) => {
 	}
 
 	if (String(statusCode).startsWith('2')) {
-		if (res.req.loggedIn) {
-			res.set('cache-control', 'private');
-		}
-
-		let code = 'ok';
-		let message = 'OK';
-		switch (statusCode) {
-			case 202:
-				code = 'accepted';
-				message = 'Accepted';
-				break;
-
-			case 204:
-				code = 'no-content';
-				message = 'No Content';
-				break;
-		}
-
-		res.status(statusCode).json({
-			status: { code, message },
-			response: payload || {},
-		});
+		handleSuccessfulResponse(statusCode, res, payload);
 	} else if (payload instanceof Error || typeof payload === 'string') {
 		const message = payload instanceof Error ? payload.message : payload;
 		const response = {};

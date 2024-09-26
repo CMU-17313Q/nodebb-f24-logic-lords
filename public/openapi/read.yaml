@@ -331,3 +331,12 @@ paths:
   /api/admin/dashboard/bug-logs:
     $ref: 'read/admin/dashboard/bug-logs.yaml'
     
+  /api/report-bug:
+    get:
+      summary: Report a bug
+      description: Endpoint to report a bug
+      responses:
+        '200':
+          description: Bug reported successfully
+        '400':
+          description: Bad request
