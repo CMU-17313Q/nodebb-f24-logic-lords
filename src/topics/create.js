@@ -118,6 +118,10 @@ module.exports = function (Topics) {
 			await user.isReadyToPost(uid, data.cid);
 		}
 
+		console.log(`anonymous: ${data.isAnonymous}`);
+		if (data.isAnonymous) {
+			data.uid = 0;
+		}
 		const tid = await Topics.create(data);
 
 		let postData = data;
