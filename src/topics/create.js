@@ -80,7 +80,6 @@ module.exports = function (Topics) {
 	Topics.post = async function (data) {
 		data = await plugins.hooks.fire('filter:topic.post', data);
 		const { uid } = data;
-		console.log('Topics.post');
 
 		const [categoryExists, canCreate, canTag, isAdmin] = await Promise.all([
 			categories.exists(data.cid),
@@ -118,7 +117,6 @@ module.exports = function (Topics) {
 			await user.isReadyToPost(uid, data.cid);
 		}
 
-		console.log(`anonymous: ${data.isAnonymous}`);
 		if (data.isAnonymous) {
 			data.uid = 0;
 		}

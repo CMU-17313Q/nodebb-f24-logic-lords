@@ -28,7 +28,6 @@ const _validatePath = async (relativePaths) => {
 };
 
 async function dissociateUploadsForPids(pids, idx, uploadNames) {
-	console.log('Ahmad');
 	return Promise.all(
 		pids.map(async pid => posts.uploads.dissociate(pid, uploadNames[idx]))
 	);
