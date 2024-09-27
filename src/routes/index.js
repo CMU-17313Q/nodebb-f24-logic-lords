@@ -9,10 +9,10 @@ const meta = require('../meta');
 const controllers = require('../controllers');
 const controllerHelpers = require('../controllers/helpers');
 const plugins = require('../plugins');
-
 const authRoutes = require('./authentication');
 const writeRoutes = require('./write');
 const helpers = require('./helpers');
+const reportBugController = require('../controllers/reportBug');
 
 const { setupPageRoute } = helpers;
 
@@ -80,6 +80,7 @@ _mounts.categories = (app, name, middleware, controllers) => {
 	setupPageRoute(app, '/recent', [], controllers.recent.get);
 	setupPageRoute(app, '/top', [], controllers.top.get);
 	setupPageRoute(app, '/unread', [middleware.ensureLoggedIn], controllers.unread.get);
+	setupPageRoute(app, '/report-bug', [], reportBugController.getBugReportForm);
 };
 
 _mounts.category = (app, name, middleware, controllers) => {
