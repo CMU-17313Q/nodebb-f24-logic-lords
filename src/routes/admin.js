@@ -68,6 +68,9 @@ function apiRoutes(router, name, middleware, controllers) {
 	router.get(`/api/${name}/analytics`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.dashboard.getAnalytics));
 	router.get(`/api/${name}/advanced/cache/dump`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.cache.dump));
 
+	//router.get(`/api/${name}/get-bug-log`), middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.dashboared.getBugLogs);
+	
+	
 	const multipart = require('connect-multiparty');
 	const multipartMiddleware = multipart();
 
