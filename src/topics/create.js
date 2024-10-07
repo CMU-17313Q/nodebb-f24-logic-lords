@@ -15,6 +15,8 @@ const privileges = require('../privileges');
 const categories = require('../categories');
 const translator = require('../translator');
 
+const inappropriateWords = ['idiot', 'moron', 'stupid', 'dumb', 'loser', 'worthless', 'lame', 'pathetic', 'fool', 'trash'];
+
 module.exports = function (Topics) {
 	Topics.create = async function (data) {
 		// This is an internal method, consider using Topics.post instead
@@ -265,6 +267,7 @@ module.exports = function (Topics) {
 
 	Topics.checkContent = function (content) {
 		check(content, meta.config.minimumPostLength, meta.config.maximumPostLength, 'content-too-short', 'content-too-long');
+		checkForInappropriateWords(content);
 	};
 
 	function check(item, min, max, minError, maxError) {
@@ -277,6 +280,16 @@ module.exports = function (Topics) {
 			throw new Error(`[[error:${minError}, ${min}]]`);
 		} else if (item.length > parseInt(max, 10)) {
 			throw new Error(`[[error:${maxError}, ${max}]]`);
+		}
+	}
+
+	// checking if there are any inappropriate words in the content
+	function checkForInappropriateWords(content) {
+		const lowercaseContent = content.toLowerCase(); // Convert content to lowercase to handle case insensitivity
+		const foundWord = inappropriateWords.find(word => lowercaseContent.includes(word));
+		if (foundWord) {
+			console.log('foundWord', foundWord);
+			throw new Error(`[[error:contains-inappropriate-word, ${foundWord}]]`);
 		}
 	}
 

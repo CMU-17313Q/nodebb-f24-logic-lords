@@ -90,8 +90,18 @@ postsAPI.edit = async function (caller, data) {
 	if (!caller.uid) {
 		throw new Error('[[error:not-logged-in]]');
 	}
+
 	// Trim and remove HTML (latter for composers that send in HTML, like redactor)
-	const contentLen = utils.stripHTMLTags(data.content).trim().length;
+	const content = utils.stripHTMLTags(data.content).trim();
+	const contentLen = content.length;
+	// Inappropriate words list
+	const inappropriateWords = ['idiot', 'moron', 'stupid', 'dumb', 'loser', 'worthless', 'lame', 'pathetic', 'fool', 'trash'];
+	// Check for inappropriate words in the content
+	const containsInappropriateWord = inappropriateWords.some(word => content.toLowerCase().includes(word));
+	if (containsInappropriateWord) {
+		console.log('Content contains inappropriate words');
+		throw new Error('[[error:content-contains-inappropriate-words]]');
+	}
 
 	if (data.title && data.title.length < meta.config.minimumTitleLength) {
 		throw new Error(`[[error:title-too-short, ${meta.config.minimumTitleLength}]]`);
