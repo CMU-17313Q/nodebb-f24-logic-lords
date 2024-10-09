@@ -391,21 +391,25 @@ dashboardController.getSearches = async (req, res) => {
 };
 
 const bugLogs = [];
+
 dashboardController.getBugLogs = async function (req, res) {
-	console.log('getbuglogs');
-	try {
-	  const sanitizedBugLogs = bugLogs.map(log => ({
-		description: validator.escape(String(log.description)),
-		timestamp: new Date(log.timestamp).toISOString(),
-	  }));
-  
-	  // Send a JSON response instead of rendering a template
-	  res.json({ bugLogs: sanitizedBugLogs });
-	} catch (error) {
-	  console.error('Error fetching bug logs:', error); // Log the error for debugging
-	  res.status(500).json({ message: 'Internal server error' });
-	}
-  };
+    console.log('getbuglogs'); // Add logging
+    try {
+        // Sanitize and format bug logs before rendering
+        const sanitizedBugLogs = bugLogs.map(log => ({
+            user: validator.escape(String(log.user)),
+            description: validator.escape(String(log.description)),
+            timestamp: new Date(log.timestamp).toISOString(),
+        }));
+    
+        // Pass the sanitized bug logs to the view for rendering
+        res.render('admin/dashboard/bug-logs', { bugLogs: sanitizedBugLogs });
+    } catch (error) {
+        console.error('Error fetching bug logs:', error); // Log the error for debugging
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 dashboardController.submitBugReport = async function (req, res) {
     try {
@@ -416,9 +420,10 @@ dashboardController.submitBugReport = async function (req, res) {
 
         const sanitizedDescription = validator.escape(description);
         const timestamp = Date.now();
+        const user = req.user ? req.user.username : 'Anonymous'; // Assuming req.user contains the user information
 
         // Add the bug report to the in-memory array
-        bugLogs.push({ description: sanitizedDescription, timestamp });
+        bugLogs.push({ user, description: sanitizedDescription, timestamp });
 
         res.status(201).json({ message: 'Bug report submitted successfully' });
     } catch (error) {
@@ -426,3 +431,4 @@ dashboardController.submitBugReport = async function (req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
