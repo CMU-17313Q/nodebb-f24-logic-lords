@@ -38,19 +38,18 @@ define('admin/dashboard/bug-logs', ['jquery', 'api'], ($, api) => {
     }
   
     function renderBugLogsTable(bugLogs) {
-      // Render the bug logs table using the fetched data
-      const tableBody = '';
-      bugLogs.forEach((log) => {
-        tableBody += `
-          <tr>
-            <td>${log.description}</td>
-            <td>${log.description}</td>
-            <td>${log.status}</td>
-            <td>${log.timestamp}</td>
-          </tr>
-        `;
-      });
-      $('#bug-logs-table tbody').html(tableBody);
+        let tableBody = ''; // Change const to let
+        bugLogs.forEach((log) => {
+          tableBody += `
+            <tr>
+              <td>${log.description}</td>
+              <td>${log.description}</td>
+              <td>${log.status}</td>
+              <td>${log.timestamp}</td>
+            </tr>
+          `;
+        });
+        $('#bug-logs-table tbody').html(tableBody);
     }
   
     // Call init directly
@@ -58,4 +57,3 @@ define('admin/dashboard/bug-logs', ['jquery', 'api'], ($, api) => {
   
     return BugLogs;
   });
-  
