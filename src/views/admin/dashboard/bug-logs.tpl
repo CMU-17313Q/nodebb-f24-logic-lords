@@ -12,19 +12,19 @@
         </thead>
         <tbody>
           <!-- Use Benchpress syntax for iteration -->
-          {{{ if !bugs.length }}}
+          {{#unless bugs.length}}
           <tr>
             <td colspan="4" class="text-center"><em>No bug logs available</em></td>
           </tr>
-          {{{ end }}}
-          {{{ each bugs }}}
+          {{/unless}}
+          {{#each bugs}}
           <tr>
-            <td><!-- IMPORT bugs.title --></td>
-            <td><!-- IMPORT bugs.description --></td>
-            <td><!-- IMPORT bugs.status --></td>
-            <td><!-- IMPORT bugs.timestamp --></td>
+            <td>{{this.title}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.status}}</td>
+            <td>{{this.timestamp}}</td>
           </tr>
-          {{{ end }}}
+          {{/each}}
         </tbody>
       </table>
     </div>
