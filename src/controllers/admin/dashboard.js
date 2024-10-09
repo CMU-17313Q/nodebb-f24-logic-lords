@@ -391,5 +391,39 @@ dashboardController.getSearches = async (req, res) => {
 };
 
 dashboardController.getBugLogs = async function (req, res) {
-	res.render('admin/dashboard/bug-logs', {});
+	console.log('getbuglogs');
+	try {
+	  const sanitizedBugLogs = bugLogs.map(log => ({
+		description: validator.escape(String(log.description)),
+		timestamp: new Date(log.timestamp).toISOString(),
+	  }));
+  
+	  // Render the view page with the sanitized bug logs
+	  res.render('admin/dashboard/bug-logs', { bugLogs: sanitizedBugLogs });
+	} catch (error) {
+	  console.error('Error fetching bug logs:', error); // Log the error for debugging
+	  res.status(500).render('error', { message: 'Internal server error' });
+	}
+  };
+
+dashboardController.submitBugReport = async function (req, res) {
+    try {
+        const { description } = req.body;
+        if (!description) {
+            return res.status(400).json({ message: 'Description is required' });
+        }
+
+        const sanitizedDescription = validator.escape(description);
+        const timestamp = Date.now();
+
+        // Add the bug report to the in-memory array
+        bugLogs.push({ description: sanitizedDescription, timestamp });
+
+        res.status(201).json({ message: 'Bug report submitted successfully' });
+    } catch (error) {
+        console.error('Error submitting bug report:', error); // Log the error for debugging
+        res.status(500).json({ message: 'Internal server error' });
+    }
 };
+
+

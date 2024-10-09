@@ -95,21 +95,6 @@
             <input type="submit" value="Submit">
         </form>
     </div>
-    <script>
-        document.getElementById('bug-report-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting the traditional way
-            const banner = document.getElementById('form-banner');
-            const form = document.getElementById('bug-report-form');
-            banner.style.display = 'block'; // Show the banner
-            banner.classList.add('show'); // Add the class to slide in the banner
-            setTimeout(() => {
-                banner.classList.remove('show'); // Remove the class to slide out the banner
-                setTimeout(() => {
-                    banner.style.display = 'none'; // Hide the banner after the slide out
-                }, 500); // Match the transition duration
-            }, 3000); // Display the banner for 3 seconds
-            form.reset(); // Reset the form fields
-        });
-    </script>
+
 </body>
 </html>
