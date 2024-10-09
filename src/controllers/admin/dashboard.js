@@ -390,6 +390,7 @@ dashboardController.getSearches = async (req, res) => {
 	});
 };
 
+const bugLogs = [];
 dashboardController.getBugLogs = async function (req, res) {
 	console.log('getbuglogs');
 	try {
@@ -398,11 +399,11 @@ dashboardController.getBugLogs = async function (req, res) {
 		timestamp: new Date(log.timestamp).toISOString(),
 	  }));
   
-	  // Render the view page with the sanitized bug logs
-	  res.render('admin/dashboard/bug-logs', { bugLogs: sanitizedBugLogs });
+	  // Send a JSON response instead of rendering a template
+	  res.json({ bugLogs: sanitizedBugLogs });
 	} catch (error) {
 	  console.error('Error fetching bug logs:', error); // Log the error for debugging
-	  res.status(500).render('error', { message: 'Internal server error' });
+	  res.status(500).json({ message: 'Internal server error' });
 	}
   };
 
@@ -425,5 +426,3 @@ dashboardController.submitBugReport = async function (req, res) {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
-
