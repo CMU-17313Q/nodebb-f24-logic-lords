@@ -24,10 +24,10 @@
           {{{ end }}}
           {{{ each bugs }}}
           <tr>
-            <td>{{{ this.title }}}</td>
-            <td>{{{ this.description }}}</td>
-            <td>{{{ this.status }}}</td>
-            <td>{{{ this.timestamp }}}</td>
+            <td>{{ this.title }}</td>
+            <td>{{ this.description }}</td>
+            <td>{{ this.status }}</td>
+            <td>{{ this.timestamp }}</td>
           </tr>
           {{{ end }}}
         </tbody>
