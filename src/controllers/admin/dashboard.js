@@ -424,7 +424,7 @@ dashboardController.submitBugReport = async function (req, res) {
 
         // Add the bug report to the in-memory array
         bugLogs.push({ user, description: sanitizedDescription, timestamp });
-
+		console.log('Bug report submitted:', { user, description: sanitizedDescription, timestamp });
         res.status(201).json({ message: 'Bug report submitted successfully' });
     } catch (error) {
         console.error('Error submitting bug report:', error); // Log the error for debugging
