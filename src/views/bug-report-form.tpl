@@ -4,39 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bug Report Form</title>
-    <style>
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 700px;
-            margin: 40px auto; 
-            box-sizing: border-box;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>Bug Report Form</h1>
         <form id="form-popup" onsubmit="handleSubmit(event)">
-            <input type="hidden" id="csrf-token" value="{{csrfToken}}">
-            <div>
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-            <div>
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" required></textarea>
-            </div>
-            <button type="submit">Submit</button>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="bug-description">Bug Description:</label>
+            <textarea id="bug-description" name="bug-description" rows="4" required></textarea>
+
+            <input type="submit" value="Submit">
         </form>
     </div>
+
     <script>
         function handleSubmit(event) {
             event.preventDefault();
@@ -45,9 +30,11 @@
             console.log("Submitted the form yay!");
             console.log("fetching...");
 
-            const title = event.target.title.value;
-            console.log(title);
-            const description = event.target.description.value;
+            const name = event.target.name.value;
+            console.log(name);
+            const email = event.target.email.value;
+            console.log(email);
+            const description = event.target['bug-description'].value;
             console.log(description);
             const csrfToken = document.querySelector('#csrf-token').value;
             console.log(csrfToken);
@@ -58,7 +45,7 @@
                     'Content-Type': 'application/json',
                     'x-csrf-token': csrfToken // Include the CSRF token in the request headers
                 },
-                body: JSON.stringify({ title, description })
+                body: JSON.stringify({ name, email, description })
             })
             .then(response => response.json())
             .then(data => {
