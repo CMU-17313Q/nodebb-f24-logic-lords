@@ -96,57 +96,5 @@
         </form>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const form = document.getElementById('bug-report-form');
-            form.onsubmit = async function(event) {
-                event.preventDefault();
-                console.log("pressed the submit button");
-                alert('Thank you! We received your feedback and will get back to you soon.');
-                console.log("Submitted the form ip yay !");
-                console.log("fetchingggggg");
-
-                const name = event.target.name.value;
-                console.log(name);
-                const email = event.target.email.value;
-                console.log(email);
-                const bugDescription = event.target['bug-description'].value;
-                console.log(bugDescription);
-                const csrfToken = document.querySelector('#csrf-token') ? document.querySelector('#csrf-token').value : '';
-
-                try {
-                    const response = await fetch(`/api/${name}/submit-bug-report`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-csrf-token': csrfToken // Include the CSRF token in the request headers
-                        },
-                        body: JSON.stringify({ name, email, bugDescription })
-                    });
-
-                    if (response.ok) {
-                        document.getElementById('form-banner').classList.add('show');
-                        setTimeout(() => {
-                            document.getElementById('form-banner').classList.remove('show');
-                        }, 3000);
-                    } else {
-                        console.error('Failed to submit form');
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            };
-
-            // Register the service worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/service-worker.js')
-                .then(function(registration) {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                }).catch(function(error) {
-                    console.log('Service Worker registration failed:', error);
-                });
-            }
-        });
-    </script>
 </body>
 </html>
