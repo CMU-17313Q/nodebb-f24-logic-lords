@@ -2,6 +2,11 @@
 'use strict';
 
 self.addEventListener('fetch', function (event) {
+    // Ignore requests to chrome-extension:// URLs
+    if (event.request.url.startsWith('chrome-extension://')) {
+        return;
+    }
+
     // Allow POST requests to go through
     if (event.request.method === 'POST') {
         event.respondWith(
