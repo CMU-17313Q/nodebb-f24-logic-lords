@@ -18,6 +18,7 @@ define('admin/dashboard/bug-logs', ['jquery', 'api'], ($, api) => {
                 bugLogsContainer.empty();
 
                 if (data.bugLogs && data.bugLogs.length > 0) {
+                    console.log(data.bugLogs);
                     data.bugLogs.forEach((log) => {
                         const logElement = $('<div>').addClass('bug-log');
                         logElement.append($('<p>').text(`User: ${log.user}`));

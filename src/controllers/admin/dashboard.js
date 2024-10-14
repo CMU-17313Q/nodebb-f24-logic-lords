@@ -396,6 +396,7 @@ dashboardController.getBugLogs = async function (req, res) {
     console.log('getbuglogs'); // Add logging
     try {
         // Sanitize and format bug logs before rendering
+        console.log('bugLogs:', bugLogs);
         const sanitizedBugLogs = bugLogs.map(log => ({
             user: validator.escape(String(log.user)),
             description: validator.escape(String(log.description)),
@@ -411,6 +412,8 @@ dashboardController.getBugLogs = async function (req, res) {
 };
 
 dashboardController.submitBugReport = async function (req, res) {
+    console.log('submitBugReport'); // Add logging
+    console.log('req.body:', req.body); // Add logging
     try {
         const { description } = req.body;
         if (!description) {
