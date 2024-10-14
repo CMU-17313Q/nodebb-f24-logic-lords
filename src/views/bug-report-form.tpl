@@ -112,12 +112,13 @@ document.addEventListener('DOMContentLoaded', function() {
             email: formData.get('email'),
             'bug-description': formData.get('bug-description')
         };
+        console.log(data);
 
         // Get CSRF token from meta tag or other source
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
 
-        fetch('/api/admin/submit-bug-report', {
+        fetch('/api/submit-bug-report', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -127,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
