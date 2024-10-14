@@ -115,7 +115,7 @@
                 const csrfToken = document.querySelector('#csrf-token') ? document.querySelector('#csrf-token').value : '';
 
                 try {
-                    const response = await fetch('https://api.example.com/submit-bug', {
+                    const response = await fetch(`/api/${name}/submit-bug-report`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
