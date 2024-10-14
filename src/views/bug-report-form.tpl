@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
 
-        fetch('/api/submit-bug-report', {
+        fetch('/api/admin/submit-bug-report', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
