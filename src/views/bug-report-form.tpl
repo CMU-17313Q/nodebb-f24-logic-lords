@@ -96,41 +96,5 @@
         </form>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const form = document.querySelector("#bug-report-form");
-            form.onsubmit = function (event) {
-                event.preventDefault();
-                console.log("pressed the submit button");
-                alert('Thank you! We received your feedback and will get back to you soon.');
-                console.log("Submitted the form!");
-
-                const name = event.target.name.value;
-                const email = event.target.email.value;
-                const description = event.target['bug-description'].value;
-                console.log(name, email, description);
-
-                fetch(`/api/submit-bug-report`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        description: description
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                    document.getElementById('form-banner').classList.add('show');
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-            };
-        });
-    </script>
 </body>
 </html>
