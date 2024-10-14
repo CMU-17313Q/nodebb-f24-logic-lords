@@ -17,15 +17,21 @@ define('admin/dashboard/bug-logs', ['jquery', 'api'], ($, api) => {
                 const bugLogsContainer = $('#bug-logs-container');
                 bugLogsContainer.empty();
 
-                data.bugLogs.forEach((log) => {
-                    const logElement = $('<div>').addClass('bug-log');
-                    logElement.append($('<p>').text(`Description: ${log.description}`));
-                    logElement.append($('<p>').text(`Timestamp: ${log.timestamp}`));
-                    bugLogsContainer.append(logElement);
-                });
+                if (data.bugLogs && data.bugLogs.length > 0) {
+                    data.bugLogs.forEach((log) => {
+                        const logElement = $('<div>').addClass('bug-log');
+                        logElement.append($('<p>').text(`User: ${log.user}`));
+                        logElement.append($('<p>').text(`Description: ${log.description}`));
+                        logElement.append($('<p>').text(`Timestamp: ${log.timestamp}`));
+                        bugLogsContainer.append(logElement);
+                    });
+                } else {
+                    bugLogsContainer.append($('<p>').text('No bug logs found.'));
+                }
             })
             .catch((err) => {
                 console.error('Error fetching bug logs:', err);
+                $('#bug-logs-container').append($('<p>').text('Error fetching bug logs.'));
             });
     }
 
