@@ -96,5 +96,37 @@
         </form>
     </div>
 
+    <script>
+        document.getElementById('bug-report-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                bugDescription: document.getElementById('bug-description').value
+            };
+
+            try {
+                const response = await fetch('https://api.example.com/submit-bug', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    document.getElementById('form-banner').classList.add('show');
+                    setTimeout(() => {
+                        document.getElementById('form-banner').classList.remove('show');
+                    }, 3000);
+                } else {
+                    console.error('Failed to submit form');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
 </body>
 </html>
