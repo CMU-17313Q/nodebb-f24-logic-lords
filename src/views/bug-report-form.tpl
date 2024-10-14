@@ -107,21 +107,22 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         const formData = new FormData(form);
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            'bug-description': formData.get('bug-description')
-        };
-
-        // Get CSRF token from meta tag or other source
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+
+        formData.append('_csrf', csrfToken); // Append CSRF token to form data
+
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        console.log(data);
 
         fetch('/api/admin/submit-bug-report', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'CSRF-Token': csrfToken // Include CSRF token in headers
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
         })
