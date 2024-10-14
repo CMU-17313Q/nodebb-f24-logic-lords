@@ -97,35 +97,45 @@
     </div>
 
     <script>
-        document.getElementById('bug-report-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById('bug-report-form');
+            form.onsubmit = async function(event) {
+                event.preventDefault();
+                console.log("pressed the submit button");
+                alert('Thank you! We received your feedback and will get back to you soon.');
+                console.log("Submitted the form ip yay !");
+                console.log("fetchingggggg");
 
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                bugDescription: document.getElementById('bug-description').value
-            };
+                const name = event.target.name.value;
+                console.log(name);
+                const email = event.target.email.value;
+                console.log(email);
+                const bugDescription = event.target['bug-description'].value;
+                console.log(bugDescription);
+                const csrfToken = document.querySelector('#csrf-token') ? document.querySelector('#csrf-token').value : '';
 
-            try {
-                const response = await fetch('https://api.example.com/submit-bug', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
+                try {
+                    const response = await fetch('https://api.example.com/submit-bug', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-csrf-token': csrfToken // Include the CSRF token in the request headers
+                        },
+                        body: JSON.stringify({ name, email, bugDescription })
+                    });
 
-                if (response.ok) {
-                    document.getElementById('form-banner').classList.add('show');
-                    setTimeout(() => {
-                        document.getElementById('form-banner').classList.remove('show');
-                    }, 3000);
-                } else {
-                    console.error('Failed to submit form');
+                    if (response.ok) {
+                        document.getElementById('form-banner').classList.add('show');
+                        setTimeout(() => {
+                            document.getElementById('form-banner').classList.remove('show');
+                        }, 3000);
+                    } else {
+                        console.error('Failed to submit form');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                 }
-            } catch (error) {
-                console.error('Error:', error);
-            }
+            };
         });
     </script>
 </body>
