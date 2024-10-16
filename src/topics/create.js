@@ -92,6 +92,12 @@ module.exports = function (Topics) {
 		data.title = String(data.title).trim();
 		data.tags = data.tags || [];
 		data.content = String(data.content || '').trimEnd();
+		if (filterInappropriateWords(data.title)){
+			thrown new Error('Your title contains inappropriate words, please update it accordingly');
+		}
+		if (filterInappropriateWords(data.content)){
+			thrown new Error('Your message contains inappropriate words, please update it accordingly');
+		}
 		if (!isAdmin) {
 			Topics.checkTitle(data.title);
 		}
@@ -182,6 +188,9 @@ module.exports = function (Topics) {
 
 		await guestHandleValid(data);
 		data.content = String(data.content || '').trimEnd();
+		if (filterInappropriateWords(data.content)){
+			thrown new Error('Your message contains inappropriate words, please update it accordingly');
+		}
 		if (!data.fromQueue && !isAdmin) {
 			await user.isReadyToPost(uid, data.cid);
 			Topics.checkContent(data.content);
