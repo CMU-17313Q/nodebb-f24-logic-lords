@@ -14,6 +14,7 @@ const posts = require('../posts');
 const privileges = require('../privileges');
 const categories = require('../categories');
 const translator = require('../translator');
+const filteringSys = require('../filters');
 
 module.exports = function (Topics) {
 	Topics.create = async function (data) {
@@ -94,7 +95,6 @@ module.exports = function (Topics) {
 		if (!isAdmin) {
 			Topics.checkTitle(data.title);
 		}
-
 		await Topics.validateTags(data.tags, data.cid, uid);
 		data.tags = await Topics.filterTags(data.tags, data.cid);
 		if (!data.fromQueue && !isAdmin) {
@@ -182,7 +182,6 @@ module.exports = function (Topics) {
 
 		await guestHandleValid(data);
 		data.content = String(data.content || '').trimEnd();
-
 		if (!data.fromQueue && !isAdmin) {
 			await user.isReadyToPost(uid, data.cid);
 			Topics.checkContent(data.content);
@@ -190,7 +189,6 @@ module.exports = function (Topics) {
 				throw new Error(`[[error:not-enough-reputation-to-post-links, ${meta.config['min:rep:post-links']}]]`);
 			}
 		}
-
 		// For replies to scheduled topics, don't have a timestamp older than topic's itself
 		if (topicData.scheduled) {
 			data.timestamp = topicData.lastposttime + 1;
@@ -258,7 +256,10 @@ module.exports = function (Topics) {
 
 		return postData;
 	}
-
+	function filterInappropriateWords(content){
+		const inappropriateWords = filteringSys.getInappropriateWords();
+		return inappropriateWords.some(word => content.toLowerCase().includes(word));
+	}
 	Topics.checkTitle = function (title) {
 		check(title, meta.config.minimumTitleLength, meta.config.maximumTitleLength, 'title-too-short', 'title-too-long');
 	};
