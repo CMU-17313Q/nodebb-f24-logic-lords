@@ -7,8 +7,15 @@ const api = {
     post: () => {}
 };
 
+// Mock the define function
+global.define = function(deps, factory) {
+    module.exports = factory($, api);
+};
+
 // Adjust the path to the correct location of the bug-logs module
-const BugLogs = require('../public/src/admin/dashboard/bug-logs')($, api);
+require('../public/src/admin/dashboard/bug-logs');
+
+const BugLogs = require('../public/src/admin/dashboard/bug-logs');
 
 describe('BugLogs Module', function() {
     beforeEach(function() {
