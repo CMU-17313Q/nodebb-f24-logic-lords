@@ -445,6 +445,37 @@ describe('Post\'s', () => {
 			assert(false);
 		});
 
+		// adding test cases for inappropriate words
+
+		it('should error if content contains inappropriate words', async () => {
+			try {
+				await apiPosts.edit({ uid: voterUid }, { pid: pid, content: 'This post contains an inappropriate word like stupid' });
+			} catch (err) {
+				return assert.equal(err.message, '[[error:inappropriate-words]]');
+			}
+			assert(false);
+		});
+
+		it('should error if title contains inappropriate words', async () => {
+			try {
+				await apiPosts.edit({ uid: voterUid }, { pid: pid, content: 'Normal content', title: 'This title contains an inappropriate word like stupid' });
+			} catch (err) {
+				return assert.equal(err.message, '[[error:inappropriate-words]]');
+			}
+			assert(false);
+		});
+
+		it('should allow edit if content and title do not contain inappropriate words', async () => {
+			const data = await apiPosts.edit({ uid: voterUid }, {
+				pid: pid,
+				content: 'Valid content',
+				title: 'Valid title',
+				tags: ['nodebb'],
+			});
+			assert.strictEqual(data.content, 'Valid content');
+			assert.strictEqual(data.topic.title, 'Valid title');
+		});
+
 		it('should error with too few tags', async () => {
 			const oldValue = meta.config.minimumTagsPerTopic;
 			meta.config.minimumTagsPerTopic = 1;
