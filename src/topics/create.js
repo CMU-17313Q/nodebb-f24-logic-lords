@@ -97,7 +97,7 @@ module.exports = function (Topics) {
 			throw new Error('Your title contains inappropriate words, please update it accordingly');
 		}
 		if (filterInappropriateWords(data.content)) {
-			throw new Error('Your message contains inappropriate words, please update it accordingly');
+			throw new Error('Your post contains inappropriate words, please update it accordingly');
 		}
 
 		if (!isAdmin) {
@@ -192,7 +192,7 @@ module.exports = function (Topics) {
 		data.content = String(data.content || '').trimEnd();
 
 		if (filterInappropriateWords(data.content)) {
-			throw new Error('Your message contains inappropriate words, please update it accordingly');
+			throw new Error('Your reply contains inappropriate words, please update it accordingly');
 		}
 
 		if (!data.fromQueue && !isAdmin) {
