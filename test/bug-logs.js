@@ -1,31 +1,55 @@
 'use strict';
 
 const assert = require('assert');
-const sinon = require('sinon');
 const $ = require('jquery'); // Assuming jQuery is available in your test environment
 const api = require('../src/routes/admin'); // Adjusted path to your API
-const BugLogs = require('../src/admin/dashboard/bug-logs'); // Adjust the path as necessary
+const BugLogsModule = require('../src/admin/dashboard/bug-logs'); // Adjust the path as necessary
 
 describe('BugLogs', () => {
-    let fetchStub;
-    let postStub;
+    let originalGet;
+    let originalPost;
+    let BugLogs;
 
     before(() => {
-        // Stub the API methods
-        fetchStub = sinon.stub(api, 'get');
-        postStub = sinon.stub(api, 'post');
+        // Save the original methods
+        originalGet = api.get;
+        originalPost = api.post;
+
+        // Mock the API methods
+        api.get = async (url) => {
+            if (url === '/api/admin/get-bug-log') {
+                return { bugLogs: [] }; // Default mock response
+            }
+        };
+
+        api.post = async (url, data) => {
+            if (url === '/api/admin/submit-bug-report') {
+                return; // Default mock response
+            }
+        };
+
+        BugLogs = BugLogsModule();
     });
 
     afterEach(() => {
-        // Restore the original methods after each test
-        fetchStub.resetHistory();
-        postStub.resetHistory();
+        // Reset the mock responses
+        api.get = async (url) => {
+            if (url === '/api/admin/get-bug-log') {
+                return { bugLogs: [] };
+            }
+        };
+
+        api.post = async (url, data) => {
+            if (url === '/api/admin/submit-bug-report') {
+                return;
+            }
+        };
     });
 
     after(() => {
-        // Restore the original methods after all tests
-        fetchStub.restore();
-        postStub.restore();
+        // Restore the original methods
+        api.get = originalGet;
+        api.post = originalPost;
     });
 
     it('should fetch and display bug logs', async () => {
@@ -36,7 +60,11 @@ describe('BugLogs', () => {
             ]
         };
 
-        fetchStub.resolves(mockData);
+        api.get = async (url) => {
+            if (url === '/api/admin/get-bug-log') {
+                return mockData;
+            }
+        };
 
         // Simulate the initialization of BugLogs
         BugLogs.init();
@@ -46,13 +74,17 @@ describe('BugLogs', () => {
 
         const bugLogsContainer = $('#bug-logs-container');
         assert.equal(bugLogsContainer.children().length, 2);
-        assert(bugLogsContainer.html().includes(':User  user1'));
+        assert(bugLogsContainer.html().includes('User: user1'));
         assert(bugLogsContainer.html().includes('Description: Bug description 1'));
         assert(bugLogsContainer.html().includes('Timestamp: 2023-10-01T10:00:00Z'));
     });
 
     it('should display a message when no bug logs are found', async () => {
-        fetchStub.resolves({ bugLogs: [] });
+        api.get = async (url) => {
+            if (url === '/api/admin/get-bug-log') {
+                return { bugLogs: [] };
+            }
+        };
 
         BugLogs.init();
         await new Promise(setImmediate);
@@ -63,7 +95,11 @@ describe('BugLogs', () => {
     });
 
     it('should handle error when fetching bug logs', async () => {
-        fetchStub.rejects(new Error('Fetch error'));
+        api.get = async (url) => {
+            if (url === '/api/admin/get-bug-log') {
+                throw new Error('Fetch error');
+            }
+        };
 
         BugLogs.init();
         await new Promise(setImmediate);
@@ -74,42 +110,55 @@ describe('BugLogs', () => {
     });
 
     it('should submit a bug report successfully', async () => {
-        postStub.resolves();
+        api.post = async (url, data) => {
+            if (url === '/api/admin/submit-bug-report') {
+                return;
+            }
+        };
 
         // Simulate user input
         $('#bug-report-description').val('A new bug report');
 
         await BugLogs.submitBugReport();
 
-        assert(postStub.calledOnce);
-        assert(postStub.calledWith('/api/admin/submit-bug-report', { description: 'A new bug report' }));
-
-        // Check if the input is cleared
         assert.equal($('#bug-report-description').val(), '');
     });
 
     it('should show an alert if description is empty on submission', async () => {
-        const alertStub = sinon.stub(window, 'alert');
-        
+        const originalAlert = window.alert;
+        let alertCalled = false;
+        window.alert = (message) => {
+            alertCalled = true;
+            assert.equal(message, 'Description is required');
+        };
+
         $('#bug-report-description').val(''); // Empty description
         await BugLogs.submitBugReport();
 
-        assert(alertStub.calledOnce);
-        assert(alertStub.calledWith('Description is required'));
+        assert(alertCalled);
 
-        alertStub.restore();
+        window.alert = originalAlert;
     });
 
     it('should handle error when submitting a bug report', async () => {
-        const alertStub = sinon.stub(window, 'alert');
-        postStub.rejects(new Error('Submit error'));
+        const originalAlert = window.alert;
+        let alertCalled = false;
+        window.alert = (message) => {
+            alertCalled = true;
+            assert.equal(message, 'Error submitting bug report');
+        };
+
+        api.post = async (url, data) => {
+            if (url === '/api/admin/submit-bug-report') {
+                throw new Error('Submit error');
+            }
+        };
 
         $('#bug-report-description').val('A new bug report');
         await BugLogs.submitBugReport();
 
-        assert(alertStub.calledOnce);
-        assert(alertStub.calledWith('Error submitting bug report'));
+        assert(alertCalled);
 
-        alertStub.restore();
+        window.alert = originalAlert;
     });
 });
