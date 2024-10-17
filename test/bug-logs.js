@@ -1,37 +1,39 @@
-describe('BugLogs Module', function() {
-    var $;
-    var api;
-    var BugLogs;
+'use strict';
 
+const assert = require('assert');
+const $ = require('jquery');
+const api = {
+    get: () => {},
+    post: () => {}
+};
+const BugLogs = require('admin/dashboard/bug-logs')($, api);
+
+describe('BugLogs Module', function() {
     beforeEach(function() {
-        $ = require('jquery');
-        api = {
-            get: jasmine.createSpy('get'),
-            post: jasmine.createSpy('post')
-        };
-        BugLogs = require('admin/dashboard/bug-logs')($, api);
         spyOn($, 'on').and.callThrough();
         spyOn($, 'val').and.callThrough();
         spyOn($, 'empty').and.callThrough();
         spyOn($, 'append').and.callThrough();
+        spyOn(api, 'get').and.callThrough();
+        spyOn(api, 'post').and.callThrough();
     });
 
     describe('init', function() {
         it('should fetch bug logs and set up event handlers', function() {
             spyOn(BugLogs, 'fetchBugLogs');
             BugLogs.init();
-            expect(BugLogs.fetchBugLogs).toHaveBeenCalled();
-            expect($('#submit-bug-report').on).toHaveBeenCalledWith('click', jasmine.any(Function));
+            assert(BugLogs.fetchBugLogs.called);
+            assert($('#submit-bug-report').on.calledWith('click', jasmine.any(Function)));
         });
     });
 
     describe('fetchBugLogs', function() {
         it('should handle successful API response', function(done) {
-            var mockData = { bugLogs: [{ user: 'test', description: 'test desc', timestamp: 'now' }] };
+            const mockData = { bugLogs: [{ user: 'test', description: 'test desc', timestamp: 'now' }] };
             api.get.and.returnValue(Promise.resolve(mockData));
             BugLogs.fetchBugLogs().then(function() {
-                expect($('#bug-logs-container').empty).toHaveBeenCalled();
-                expect($('#bug-logs-container').append).toHaveBeenCalled();
+                assert($('#bug-logs-container').empty.called);
+                assert($('#bug-logs-container').append.called);
                 done();
             });
         });
@@ -39,7 +41,7 @@ describe('BugLogs Module', function() {
         it('should handle failed API response', function(done) {
             api.get.and.returnValue(Promise.reject('error'));
             BugLogs.fetchBugLogs().catch(function() {
-                expect($('#bug-logs-container').append).toHaveBeenCalledWith(jasmine.any(Object));
+                assert($('#bug-logs-container').append.calledWith(jasmine.any(Object)));
                 done();
             });
         });
@@ -49,7 +51,7 @@ describe('BugLogs Module', function() {
         it('should validate description', function() {
             $('#bug-report-description').val.and.returnValue('');
             BugLogs.submitBugReport();
-            expect(alert).toHaveBeenCalledWith('Description is required');
+            assert(alert.calledWith('Description is required'));
         });
 
         it('should handle successful API response', function(done) {
@@ -57,9 +59,9 @@ describe('BugLogs Module', function() {
             api.post.and.returnValue(Promise.resolve());
             spyOn(BugLogs, 'fetchBugLogs');
             BugLogs.submitBugReport().then(function() {
-                expect(alert).toHaveBeenCalledWith('Bug report submitted successfully');
-                expect($('#bug-report-description').val).toHaveBeenCalledWith('');
-                expect(BugLogs.fetchBugLogs).toHaveBeenCalled();
+                assert(alert.calledWith('Bug report submitted successfully'));
+                assert($('#bug-report-description').val.calledWith(''));
+                assert(BugLogs.fetchBugLogs.called);
                 done();
             });
         });
@@ -68,7 +70,7 @@ describe('BugLogs Module', function() {
             $('#bug-report-description').val.and.returnValue('test desc');
             api.post.and.returnValue(Promise.reject('error'));
             BugLogs.submitBugReport().catch(function() {
-                expect(alert).toHaveBeenCalledWith('Error submitting bug report');
+                assert(alert.calledWith('Error submitting bug report'));
                 done();
             });
         });
