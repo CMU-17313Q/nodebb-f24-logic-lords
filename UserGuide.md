@@ -26,6 +26,6 @@ To be able to use and user test the added features, you need a working installat
 ### Posting Anonymously
 
 ### Content Filtering
-These are tests for checking if it filters inappropriate words and provide warning messages to users. The tests have been included to the test/post.js file from line 448 to 478. The testcases covers the different cases possible: (1) the title of the post contains an inappropriate word, (2) the message itself contains an inappropriate word, (3) both the title and the message does not contain any inappropriate word. And it checks for all these conditions. Because all the cases are taken into account in the testcases, the tests are sufficient.
+Content filtering functionality has been tested thoroughly, with test cases added to the test/post.js file from lines 448 to 478. These tests cover a variety of scenarios to ensure the system accurately detects inappropriate content: (1)The post's title contains inappropriate words, (2) The post's message contains inappropriate words, (3) Neither the title nor the message contains inappropriate words. Each test checks whether the system correctly identifies and handles these cases by displaying appropriate warning messages to users. Given that all possible scenarios are accounted for, the current set of test cases is comprehensive and sufficient to validate the content filtering mechanism.
 
 ### Bug Log
