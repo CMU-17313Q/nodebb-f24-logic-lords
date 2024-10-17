@@ -92,12 +92,14 @@ module.exports = function (Topics) {
 		data.title = String(data.title).trim();
 		data.tags = data.tags || [];
 		data.content = String(data.content || '').trimEnd();
-		if (filterInappropriateWords(data.title)){
-			thrown new Error('Your title contains inappropriate words, please update it accordingly');
+
+		if (filterInappropriateWords(data.title)) {
+			throw new Error('Your title contains inappropriate words, please update it accordingly');
 		}
-		if (filterInappropriateWords(data.content)){
-			thrown new Error('Your message contains inappropriate words, please update it accordingly');
+		if (filterInappropriateWords(data.content)) {
+			throw new Error('Your message contains inappropriate words, please update it accordingly');
 		}
+
 		if (!isAdmin) {
 			Topics.checkTitle(data.title);
 		}
@@ -188,9 +190,11 @@ module.exports = function (Topics) {
 
 		await guestHandleValid(data);
 		data.content = String(data.content || '').trimEnd();
-		if (filterInappropriateWords(data.content)){
-			thrown new Error('Your message contains inappropriate words, please update it accordingly');
+
+		if (filterInappropriateWords(data.content)) {
+			throw new Error('Your message contains inappropriate words, please update it accordingly');
 		}
+
 		if (!data.fromQueue && !isAdmin) {
 			await user.isReadyToPost(uid, data.cid);
 			Topics.checkContent(data.content);
@@ -265,10 +269,12 @@ module.exports = function (Topics) {
 
 		return postData;
 	}
-	function filterInappropriateWords(content){
+
+	function filterInappropriateWords(content) {
 		const inappropriateWords = filteringSys.getInappropriateWords();
 		return inappropriateWords.some(word => content.toLowerCase().includes(word));
 	}
+
 	Topics.checkTitle = function (title) {
 		check(title, meta.config.minimumTitleLength, meta.config.maximumTitleLength, 'title-too-short', 'title-too-long');
 	};
