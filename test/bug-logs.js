@@ -6,7 +6,9 @@ const api = {
     get: () => {},
     post: () => {}
 };
-const BugLogs = require('admin/dashboard/bug-logs')($, api);
+
+// Adjust the path to the correct location of the bug-logs module
+const BugLogs = require('../public/src/admin/dashboard/bug-logs')($, api);
 
 describe('BugLogs Module', function() {
     beforeEach(function() {
