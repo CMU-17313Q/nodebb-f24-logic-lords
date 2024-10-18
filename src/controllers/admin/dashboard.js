@@ -393,42 +393,42 @@ dashboardController.getSearches = async (req, res) => {
 const bugLogs = [];
 
 dashboardController.getBugLogs = async function (req, res) {
-    console.log('getbuglogs'); // Add logging
-    try {
-        // Sanitize and format bug logs before rendering
-        const sanitizedBugLogs = bugLogs.map(log => ({
-            user: validator.escape(String(log.user)),
-            description: validator.escape(String(log.description)),
-            timestamp: new Date(log.timestamp).toISOString(),
-        }));
-    
-        // Pass the sanitized bug logs to the view for rendering
-        res.render('admin/dashboard/bug-logs', { bugLogs: sanitizedBugLogs });
-    } catch (error) {
-        console.error('Error fetching bug logs:', error); // Log the error for debugging
-        res.status(500).json({ message: 'Internal server error' });
-    }
+	console.log('getbuglogs'); // Add logging
+	try {
+		// Sanitize and format bug logs before rendering
+		const sanitizedBugLogs = bugLogs.map(log => ({
+			user: validator.escape(String(log.user)),
+			description: validator.escape(String(log.description)),
+			timestamp: new Date(log.timestamp).toISOString(),
+		}));
+
+		// Pass the sanitized bug logs to the view for rendering
+		res.render('admin/dashboard/bug-logs', { bugLogs: sanitizedBugLogs });
+	} catch (error) {
+		console.error('Error fetching bug logs:', error); // Log the error for debugging
+		res.status(500).json({ message: 'Internal server error' });
+	}
 };
 
 
 dashboardController.submitBugReport = async function (req, res) {
-    try {
-        const { description } = req.body;
-        if (!description) {
-            return res.status(400).json({ message: 'Description is required' });
-        }
+	try {
+		const { description } = req.body;
+		if (!description) {
+			return res.status(400).json({ message: 'Description is required' });
+		}
 
-        const sanitizedDescription = validator.escape(description);
-        const timestamp = Date.now();
-        const user = req.user ? req.user.username : 'Anonymous'; // Assuming req.user contains the user information
+		const sanitizedDescription = validator.escape(description);
+		const timestamp = Date.now();
+		const user = req.user ? req.user.username : 'Anonymous'; // Assuming req.user contains the user information
 
-        // Add the bug report to the in-memory array
-        bugLogs.push({ user, description: sanitizedDescription, timestamp });
+		// Add the bug report to the in-memory array
+		bugLogs.push({ user, description: sanitizedDescription, timestamp });
 		console.log('Bug report submitted:', { user, description: sanitizedDescription, timestamp });
-        res.status(201).json({ message: 'Bug report submitted successfully' });
-    } catch (error) {
-        console.error('Error submitting bug report:', error); // Log the error for debugging
-        res.status(500).json({ message: 'Internal server error' });
-    }
+		res.status(201).json({ message: 'Bug report submitted successfully' });
+	} catch (error) {
+		console.error('Error submitting bug report:', error); // Log the error for debugging
+		res.status(500).json({ message: 'Internal server error' });
+	}
 };
 

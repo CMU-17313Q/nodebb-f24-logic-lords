@@ -70,7 +70,7 @@ function apiRoutes(router, name, middleware, controllers) {
 
 	router.get(`/api/${name}/get-bug-log`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.dashboard.getBugLogs));
 	router.post(`/api/${name}/submit-bug-report`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.dashboard.submitBugReport));
-	
+
 	const multipart = require('connect-multiparty');
 	const multipartMiddleware = multipart();
 
