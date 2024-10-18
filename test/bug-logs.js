@@ -1,5 +1,44 @@
 'use strict';
 
+// Mock document and window objects
+global.document = {
+    querySelectorAll: (selector) => {
+        const elements = [];
+        if (selector === '#bug-logs-container') {
+            elements.push({
+                innerHTML: '',
+                insertAdjacentHTML: (position, content) => {
+                    this.innerHTML += content;
+                },
+                children: [],
+                querySelectorAll: (subSelector) => {
+                    return [];
+                }
+            });
+        } else if (selector === '#bug-report-description') {
+            elements.push({
+                value: '',
+                addEventListener: (event, handler) => {
+                    this.handler = handler;
+                }
+            });
+        } else if (selector === '#submit-bug-report') {
+            elements.push({
+                addEventListener: (event, handler) => {
+                    this.handler = handler;
+                }
+            });
+        }
+        return elements;
+    }
+};
+
+global.window = {
+    alert: (message) => {
+        console.log('Alert:', message);
+    }
+};
+
 // Mock jQuery
 const $ = (selector) => {
     const elements = document.querySelectorAll(selector);
@@ -56,13 +95,6 @@ const api = {
     }
 };
 
-// Mock DOM elements
-document.body.innerHTML = `
-    <div id="bug-logs-container"></div>
-    <input type="text" id="bug-report-description" placeholder="Describe the bug">
-    <button id="submit-bug-report">Submit Bug Report</button>
-`;
-
 // Your original code
 const BugLogs = {};
 
@@ -105,19 +137,19 @@ function submitBugReport() {
     const description = $('#bug-report-description').val().trim();
 
     if (!description) {
-        alert('Description is required');
+        window.alert('Description is required');
         return;
     }
 
     api.post('/api/admin/submit-bug-report', { description })
         .then(() => {
-            alert('Bug report submitted successfully');
+            window.alert('Bug report submitted successfully');
             $('#bug-report-description').val('');
             fetchBugLogs();
         })
         .catch((err) => {
             console.error('Error submitting bug report:', err);
-            alert('Error submitting bug report');
+            window.alert('Error submitting bug report');
         });
 }
 
