@@ -3,7 +3,7 @@
 const assert = require('assert');
 const $ = require('jquery'); // Assuming jQuery is available in your test environment
 const api = require('../src/routes/admin'); // Adjusted path to your API
-const BugLogsModule = require('../../public/src/admin/dashboard/bug-logs'); // Corrected path
+const BugLogsModule = require('../public/src/admin/dashboard/bug-logs'); // Corrected path
 
 describe('BugLogs', () => {
     let originalGet;
