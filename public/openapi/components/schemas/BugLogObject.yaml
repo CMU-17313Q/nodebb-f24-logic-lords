@@ -1,43 +1,17 @@
-openapi: 3.0.0
-info:
-  title: Bug Logs API
-  version: 1.0.0
-paths:
-  /api/admin/get-bug-log:
-    get:
-      summary: Retrieve bug logs
-      description: Fetches a list of bug logs from the server.
-      responses:
-        '200':
-          description: A list of bug logs
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  bugLogs:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/BugLogObject'
-        '400':
-          description: Bad request
-        '500':
-          description: Internal server error
-components:
-  schemas:
-    BugLogObject:
-      type: object
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the bug log
-        description:
-          type: string
-          description: A detailed description of the bug
-        status:
-          type: string
-          description: The current status of the bug (e.g., open, closed)
-        createdAt:
-          type: string
-          format: date-time
-          description: The timestamp when the bug was created
+BugLogObject:
+  type: object
+  properties:
+    id:
+      type: string
+      description: The unique identifier for the bug log
+    description:
+      type: string
+      description: A detailed description of the bug
+    status:
+      type: string
+      description: The current status of the bug (e.g., open, closed)
+    createdAt:
+      type: string
+      format: date-time
+      description: The timestamp when the bug was created
+      
