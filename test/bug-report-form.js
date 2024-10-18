@@ -20,29 +20,6 @@ describe('Bug Report Form', () => {
         console.log(html);
     });
 
-    it('should validate required fields', () => {
-        console.log('Validating required fields');
-        const form = document.getElementById('bug-report-form');
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const descriptionTextarea = document.getElementById('bug-description');
-
-        // Clear form values
-        nameInput.value = '';
-        emailInput.value = '';
-        descriptionTextarea.value = '';
-
-        // Simulate form submission
-        const event = new dom.window.Event('submit', {
-            bubbles: true,
-            cancelable: true
-        });
-        form.dispatchEvent(event);
-
-        // Check if form is invalid
-        assert.strictEqual(form.checkValidity(), false);
-    });
-
     it('should capture form data on submit', (done) => {
         const form = document.getElementById('bug-report-form');
         const nameInput = document.getElementById('name');
@@ -84,4 +61,97 @@ describe('Bug Report Form', () => {
         // Log form data
         console.log(data);
     });
+
+    it('should validate email input', () => {
+        const form = document.getElementById('bug-report-form');
+        const emailInput = document.getElementById('email');
+
+        // Set invalid email value
+        emailInput.value = 'invalid-email';
+
+        // Simulate form submission
+        const event = new dom.window.Event('submit', {
+            bubbles: true,
+            cancelable: true
+        });
+        form.dispatchEvent(event);
+
+        // Check if form is invalid due to invalid email
+        assert.strictEqual(emailInput.checkValidity(), false);
+        assert.strictEqual(emailInput.validationMessage, 'Constraints not satisfied');
+    });
+
+    it('should not be able to submit with and empty name text box', () => {
+        const form = document.getElementById('bug-report-form');
+        const descriptionTextarea = document.getElementById('name');
+
+        // Set an empty name value 
+        descriptionTextarea.value = '';
+
+        // Simulate form submission
+        const event = new dom.window.Event('submit', {
+            bubbles: true,
+            cancelable: true
+        });
+        form.dispatchEvent(event);
+
+        // Check if form is invalid due to short bug description
+        assert.strictEqual(descriptionTextarea.checkValidity(), false);
+        assert.strictEqual(descriptionTextarea.validationMessage, 'Constraints not satisfied');
+    });
+
+    it('should not be able to submit with and empty email text box', () => {
+        const form = document.getElementById('bug-report-form');
+        const descriptionTextarea = document.getElementById('email');
+
+        // Set email value that is empty
+        descriptionTextarea.value = '';
+
+        // Simulate form submission
+        const event = new dom.window.Event('submit', {
+            bubbles: true,
+            cancelable: true
+        });
+        form.dispatchEvent(event);
+
+        // Check if form is invalid due to short bug description
+        assert.strictEqual(descriptionTextarea.checkValidity(), false);
+        assert.strictEqual(descriptionTextarea.validationMessage, 'Constraints not satisfied');
+    });
+
+    it('should not be able to submit with and empty description text box', () => {
+        const form = document.getElementById('bug-report-form');
+        const descriptionTextarea = document.getElementById('bug-description');
+
+        // Set bug description value that is empty
+        descriptionTextarea.value = '';
+
+        // Simulate form submission
+        const event = new dom.window.Event('submit', {
+            bubbles: true,
+            cancelable: true
+        });
+        form.dispatchEvent(event);
+
+        // Check if form is invalid due to short bug description
+        assert.strictEqual(descriptionTextarea.checkValidity(), false);
+        assert.strictEqual(descriptionTextarea.validationMessage, 'Constraints not satisfied');
+    });
+
+    it('should fetch bug logs', async () => {
+        const response = await fetch('http://localhost:4567/api/admin/get-bug-log');
+        const data = await response.json();
+
+        // Check if the response is an array
+        assert(Array.isArray(data), 'Response should be an array');
+
+        // Optionally, check if the array contains expected properties
+        if (data.length > 0) {
+            assert('title' in data[0], 'Bug log should have a title');
+            assert('description' in data[0], 'Bug log should have a description');
+            assert('status' in data[0], 'Bug log should have a status');
+            assert('timestamp' in data[0], 'Bug log should have a timestamp');
+        }
+    });
+
 });
