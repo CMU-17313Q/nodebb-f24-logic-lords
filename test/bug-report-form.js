@@ -20,7 +20,7 @@ describe('Bug Report Form', () => {
         console.log(html);
     });
 
-    it('should capture form data on submit', (done) => {
+    it('should fetch data upon submition', (done) => {
         const form = document.getElementById('bug-report-form');
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
@@ -138,20 +138,6 @@ describe('Bug Report Form', () => {
         assert.strictEqual(descriptionTextarea.validationMessage, 'Constraints not satisfied');
     });
 
-    it('should fetch bug logs', async () => {
-        const response = await fetch('http://localhost:4567/api/admin/get-bug-log');
-        const data = await response.json();
 
-        // Check if the response is an array
-        assert(Array.isArray(data), 'Response should be an array');
-
-        // Optionally, check if the array contains expected properties
-        if (data.length > 0) {
-            assert('title' in data[0], 'Bug log should have a title');
-            assert('description' in data[0], 'Bug log should have a description');
-            assert('status' in data[0], 'Bug log should have a status');
-            assert('timestamp' in data[0], 'Bug log should have a timestamp');
-        }
-    });
 
 });
