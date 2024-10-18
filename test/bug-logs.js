@@ -3,6 +3,7 @@
 const assert = require('assert');
 const $ = require('jquery'); // Assuming jQuery is available in your test environment
 const api = require('../src/routes/admin'); // Adjusted path to your API
+const helpers = require('../src/routes/helpers'); // Adjusted path to your helpers
 
 describe('BugLogs', () => {
     let originalGet;
@@ -31,6 +32,9 @@ describe('BugLogs', () => {
         global.define = (name, deps, factory) => {
             BugLogs = factory($, api);
         };
+
+        // Mock the setupPageRoute function
+        helpers.setupPageRoute = () => {};
 
         // Load the bug-logs module
         require('../public/src/admin/dashboard/bug-logs');
