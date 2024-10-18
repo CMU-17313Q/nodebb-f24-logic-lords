@@ -3,7 +3,6 @@
 const assert = require('assert');
 const $ = require('jquery'); // Assuming jQuery is available in your test environment
 const api = require('../src/routes/admin'); // Adjusted path to your API
-const BugLogsModule = require('../public/src/admin/dashboard/bug-logs'); // Corrected path
 
 describe('BugLogs', () => {
     let originalGet;
@@ -28,7 +27,16 @@ describe('BugLogs', () => {
             }
         };
 
-        BugLogs = BugLogsModule();
+        // Mock the define function to simulate AMD environment
+        global.define = (name, deps, factory) => {
+            BugLogs = factory($, api);
+        };
+
+        // Load the bug-logs module
+        require('../public/src/admin/dashboard/bug-logs');
+
+        // Clean up the global define function
+        delete global.define;
     });
 
     afterEach(() => {
