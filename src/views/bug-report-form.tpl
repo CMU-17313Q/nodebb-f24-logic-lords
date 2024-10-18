@@ -99,6 +99,7 @@
 
 </body>
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('bug-report-form');
     const banner = document.getElementById('form-banner');
