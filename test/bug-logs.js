@@ -7,7 +7,7 @@ global.document = {
         if (selector === '#bug-logs-container') {
             elements.push({
                 innerHTML: '',
-                insertAdjacentHTML: (position, content) => {
+                insertAdjacentHTML: function (position, content) {
                     this.innerHTML += content;
                 },
                 children: [],
@@ -18,16 +18,16 @@ global.document = {
         } else if (selector === '#bug-report-description') {
             elements.push({
                 value: '',
-                addEventListener: (event, handler) => {
+                addEventListener: function (event, handler) {
                     this.handler = handler;
                 }
             });
         } else if (selector === '#submit-bug-report') {
             elements.push({
-                addEventListener: (event, handler) => {
+                addEventListener: function (event, handler) {
                     this.handler = handler;
                 },
-                click: () => {
+                click: function () {
                     if (this.handler) {
                         this.handler();
                     }
@@ -35,6 +35,27 @@ global.document = {
             });
         }
         return elements;
+    },
+    createElement: (tagName) => {
+        return {
+            classList: {
+                add: function (className) {
+                    this.className = className;
+                }
+            },
+            innerHTML: '',
+            appendChild: function (child) {
+                this.innerHTML += child.outerHTML;
+            },
+            outerHTML: '',
+            set innerHTML(value) {
+                this._innerHTML = value;
+                this.outerHTML = `<${tagName} class="${this.className}">${value}</${tagName}>`;
+            },
+            get innerHTML() {
+                return this._innerHTML;
+            }
+        };
     }
 };
 
