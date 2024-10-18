@@ -26,6 +26,11 @@ global.document = {
             elements.push({
                 addEventListener: (event, handler) => {
                     this.handler = handler;
+                },
+                click: () => {
+                    if (this.handler) {
+                        this.handler();
+                    }
                 }
             });
         }
@@ -64,6 +69,13 @@ const $ = (selector) => {
         },
         find: (selector) => {
             return elements[0].querySelectorAll(selector);
+        },
+        click: () => {
+            elements.forEach(element => {
+                if (element.click) {
+                    element.click();
+                }
+            });
         }
     };
 };
