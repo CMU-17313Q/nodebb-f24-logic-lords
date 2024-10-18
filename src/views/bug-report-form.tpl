@@ -156,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 banner.classList.remove('show');
             }, 3000);
         });
+
     });
 });
 </script>
