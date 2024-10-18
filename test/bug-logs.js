@@ -1,5 +1,7 @@
 'use strict';
 
+/* global document, window */
+
 // Mock document and window objects
 global.document = {
 	querySelectorAll: (selector) => {
@@ -72,13 +74,13 @@ const $ = (selector) => {
 			if (value === undefined) {
 				return elements[0].value;
 			}
-			elements.forEach(element => element.value = value);
+			elements.forEach((element) => { element.value = value; });
 		},
 		append: (content) => {
 			elements.forEach(element => element.insertAdjacentHTML('beforeend', content));
 		},
 		empty: () => {
-			elements.forEach(element => element.innerHTML = '');
+			elements.forEach((element) => { element.innerHTML = ''; });
 		},
 		children: () => elements[0].children,
 		find: selector => elements[0].querySelectorAll(selector),
@@ -157,19 +159,19 @@ function submitBugReport() {
 	const description = $('#bug-report-description').val().trim();
 
 	if (!description) {
-		window.alert('Description is required');
+		console.log('Description is required');
 		return;
 	}
 
 	api.post('/api/admin/submit-bug-report', { description })
 		.then(() => {
-			window.alert('Bug report submitted successfully');
+			console.log('Bug report submitted successfully');
 			$('#bug-report-description').val('');
 			fetchBugLogs();
 		})
 		.catch((err) => {
 			console.error('Error submitting bug report:', err);
-			window.alert('Error submitting bug report');
+			console.log('Error submitting bug report');
 		});
 }
 
