@@ -40,7 +40,7 @@ global.document = {
 				this.className = className;
 			},
 		},
-		innerHTML: '',
+		_innerHTML: '',
 		appendChild: function (child) {
 			this.innerHTML += child.outerHTML;
 		},
@@ -103,14 +103,14 @@ const api = {
 				],
 			});
 		} else {
-			reject('Invalid URL');
+			reject(new Error('Invalid URL'));
 		}
 	}),
 	post: (url, data) => new Promise((resolve, reject) => {
 		if (url === '/api/admin/submit-bug-report' && data.description) {
 			resolve();
 		} else {
-			reject('Invalid URL or data');
+			reject(new Error('Invalid URL or data'));
 		}
 	}),
 };
