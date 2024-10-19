@@ -6,18 +6,18 @@ const path = require('path');
 const assert = require('assert');
 
 describe('Bug Report Form', () => {
-    console.log('*'.repeat(20));
-    console.log('Beginning of the test');
+    //console.log('*'.repeat(20));
+    //console.log('Beginning of the test');
     let dom;
     let document;
 
     before((done) => {
-        console.log('Setting up the test');
+        // console.log('Setting up the test');
         const html = fs.readFileSync(path.resolve(__dirname, '../src/views/bug-report-form.tpl'), 'utf8');
         dom = new JSDOM(html, { runScripts: 'dangerously' });
         document = dom.window.document;
         done();
-        console.log(html);
+        // console.log(html);
     });
 
     it('should fetch data upon submition', (done) => {
@@ -137,7 +137,5 @@ describe('Bug Report Form', () => {
         assert.strictEqual(descriptionTextarea.checkValidity(), false);
         assert.strictEqual(descriptionTextarea.validationMessage, 'Constraints not satisfied');
     });
-
-
 
 });
