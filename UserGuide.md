@@ -6,7 +6,11 @@ This guide provides an outline of how to use and user test the new features adde
 ---
 
 ## NodeBB Installation
-To be able to use and user test the added features, you need a working installation of this version of NodeBB.
+NodeBB requires the following software to be installed:
+- A version of Node.js at least 16 or greater (installation/upgrade instructions)
+- MongoDB, version 3.6 or greater or Redis, version 2.8.9 or greater
+- If you are using clustering you need Redis installed and configured.
+- nginx, version 1.3.13 or greater (only if intending to use nginx to proxy requests to a NodeBB
 
 
 ---
