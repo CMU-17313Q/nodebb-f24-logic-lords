@@ -341,12 +341,12 @@ paths:
         '400':
           description: Bad request
 
-/api/admin/get-bug-log:
+  /api/admin/get-bug-log:
     get:
       summary: Get bug logs
       description: Endpoint to get bug logs
       responses:
         '200':
-          description: Bug logs fetched successfully
+          description: Bug logs retrieved successfully
         '400':
           description: Bad request
