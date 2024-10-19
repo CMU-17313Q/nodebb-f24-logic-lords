@@ -1,62 +1,62 @@
 'use strict';
 
 define('admin/dashboard/bug-logs', ['jquery', 'api'], ($, api) => {
-    const BugLogs = {};
+	const BugLogs = {};
 
-    BugLogs.init = () => {
-        // Fetch and display bug logs
-        fetchBugLogs();
+	BugLogs.init = () => {
+		// Fetch and display bug logs
+		fetchBugLogs();
 
-        // Handle bug report submission
-        $('#submit').on('click', submitBugReport);
-    };
+		// Handle bug report submission
+		$('#submit').on('click', submitBugReport);
+	};
 
-    function fetchBugLogs() {
-        api.get('/api/admin/get-bug-log')
-            .then((data) => {
-                const bugLogsContainer = $('#bug-logs-container');
-                console.log(bugLogsContainer);
-                bugLogsContainer.empty();
+	function fetchBugLogs() {
+		api.get('/api/admin/get-bug-log')
+			.then((data) => {
+				const bugLogsContainer = $('#bug-logs-container');
+				console.log(bugLogsContainer);
+				bugLogsContainer.empty();
 
-                if (data.bugLogs && data.bugLogs.length > 0) {
-                    console.log(data.bugLogs);
-                    data.bugLogs.forEach((log) => {
-                        const logElement = $('<div>').addClass('bug-log');
-                        logElement.append($('<p>').text(`Name: ${log.name}`));
-                        logElement.append($('<p>').text(`Email: ${log.email}`));
-                        logElement.append($('<p>').text(`Description: ${log.bug-description}`));
-                        logElement.append($('<p>').text(`Timestamp: ${log.timestamp}`));
-                        bugLogsContainer.append(logElement);
-                    });
-                } else {
-                    bugLogsContainer.append($('<p>').text('No bug logs found.'));
-                }
-            })
-            .catch((err) => {
-                console.error('Error fetching bug logs:', err);
-                $('#bug-logs-container').append($('<p>').text('Error fetching bug logs.'));
-            });
-    }
+				if (data.bugLogs && data.bugLogs.length > 0) {
+					console.log(data.bugLogs);
+					data.bugLogs.forEach((log) => {
+						const logElement = $('<div>').addClass('bug-log');
+						logElement.append($('<p>').text(`Name: ${log.name}`));
+						logElement.append($('<p>').text(`Email: ${log.email}`));
+						logElement.append($('<p>').text(`Description: ${log.bugDescription}`));
+						logElement.append($('<p>').text(`Timestamp: ${log.timestamp}`));
+						bugLogsContainer.append(logElement);
+					});
+				} else {
+					bugLogsContainer.append($('<p>').text('No bug logs found.'));
+				}
+			})
+			.catch((err) => {
+				console.error('Error fetching bug logs:', err);
+				$('#bug-logs-container').append($('<p>').text('Error fetching bug logs.'));
+			});
+	}
 
-    function submitBugReport() {
-        const description = $('#bug-report-description').val().trim();
+	function submitBugReport() {
+		const description = $('#bug-report-description').val().trim();
 
-        if (!description) {
-            alert('Description is required');
-            return;
-        }
+		if (!description) {
+			alert('Description is required');
+			return;
+		}
 
-        api.post('/api/admin/submit-bug-report', { description })
-            .then(() => {
-                alert('Bug report submitted successfully');
-                $('#bug-report-description').val('');
-                fetchBugLogs();
-            })
-            .catch((err) => {
-                console.error('Error submitting bug report:', err);
-                alert('Error submitting bug report');
-            });
-    }
+		api.post('/api/admin/submit-bug-report', { description })
+			.then(() => {
+				alert('Bug report submitted successfully');
+				$('#bug-report-description').val('');
+				fetchBugLogs();
+			})
+			.catch((err) => {
+				console.error('Error submitting bug report:', err);
+				alert('Error submitting bug report');
+			});
+	}
 
-    return BugLogs;
+	return BugLogs;
 });
