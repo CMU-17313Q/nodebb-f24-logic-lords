@@ -24,7 +24,7 @@ define('admin/dashboard/bug-logs', ['jquery', 'api'], ($, api) => {
 						const logElement = $('<div>').addClass('bug-log');
 						logElement.append($('<p>').text(`Name: ${log.name}`));
 						logElement.append($('<p>').text(`Email: ${log.email}`));
-						logElement.append($('<p>').text(`Description: ${log.bug - description}`));
+						logElement.append($('<p>').text(`Description: ${log.bugDescription}`));
 						logElement.append($('<p>').text(`Timestamp: ${log.timestamp}`));
 						bugLogsContainer.append(logElement);
 					});
