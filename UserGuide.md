@@ -37,3 +37,14 @@ Content filtering functionality has been tested thoroughly, with test cases adde
 As for the bug report form, it has been tested carfully to ensure its functionality is sucessfully implement by covering essential scenarios which can be found in the test/bug-report-form.js file. Test cases include: (1) The form fetches and logs data correctly upon submission, (2) The email field is validated for proper format, (3) The name field cannot be submitted if left empty, (4) The email field must not be empty, and (5) The bug description cannot be empty as well. Each test validates the form’s ability to handle these cases by checking that submission is prevented when necessary and appropriate error messages are displayed. The tests provide comprehensive coverage to validate the form’s functionality.
 
 The bug log page has been tested thoroughly in the file test/bug-logs.js. Test cases include: (1) The fetchBugLogs function correctly fetches and displays bug logs from the API, (2) The submitBugReport function successfully submits a bug report when the description is provided, (3) The bug report description field is validated to ensure it is not empty before submission, (4) The bug logs container is properly emptied and updated with new logs upon fetching, and (5) Error handling is tested to ensure appropriate messages are displayed when fetching or submitting fails. Each test validates the module's ability to handle these cases by checking that the DOM is updated correctly and appropriate console messages are logged. The tests provide comprehensive coverage to validate the module's functionality.
+
+in the case of this user story due to its incompletion this has resulted in manual testing to ensure seperate functionalities are working. We focused on validating key API operations:
+
+1. **GET Requests**: We manually tested the API's ability to fetch data using the browser's Console tab. By executing `fetch` commands, we verified that responses included the expected information such as user IDs, usernames, and login statuses, confirming that data retrieval worked correctly.
+   
+2. **Form Submission**: We also monitored the Network tab to ensure that when we submitted forms, the correct data was sent to the API and appropriate responses were received. This step was crucial in validating the data submission flow.
+
+3. **Error Handling**: Tests included checking how the system reacted to failure scenarios, ensuring that appropriate error messages were displayed when fetching or submitting data failed.
+
+These tests helped us ensure the controller was handling data effectively.
+
