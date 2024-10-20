@@ -57,10 +57,10 @@ describe('Post\'s', () => {
 			cid,
 			title: 'Anonymous Post',
 			content: 'Anonymous post content',
-			isAnonymous: true
-		})
+			isAnonymous: true,
+		});
 		assert.equal(data.postData.uid, 0);
-	})
+	});
 
 	it('should update category teaser properly', async () => {
 		const getCategoriesAsync = async () => (await request.get(`${nconf.get('url')}/api/categories`, { })).body;
