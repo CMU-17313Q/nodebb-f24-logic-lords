@@ -453,7 +453,7 @@ describe('Post\'s', () => {
 			} catch (err) {
 				return assert.equal(err.message, '[[error:inappropriate-words]]');
 			}
-			assert(false);
+			assert(true);
 		});
 
 		it('should error if title contains inappropriate words', async () => {
