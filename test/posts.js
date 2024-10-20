@@ -51,6 +51,17 @@ describe('Post\'s', () => {
 		await groups.join('Global Moderators', globalModUid);
 	});
 
+	it('should create an anonymous post', async () => {
+		const data = await topics.post({
+			uid: voteeUid,
+			cid,
+			title: 'Anonymous Post',
+			content: 'Anonymous post content',
+			isAnonymous: true
+		})
+		assert.equal(data.postData.uid, 0);
+	})
+
 	it('should update category teaser properly', async () => {
 		const getCategoriesAsync = async () => (await request.get(`${nconf.get('url')}/api/categories`, { })).body;
 		const postResult = await topics.post({ uid: globalModUid, cid: cid, title: 'topic title', content: '123456789' });
