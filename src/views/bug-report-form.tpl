@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bug Report Form</title>
+    <meta name="csrf-token" content="{{csrfToken}}">
     <style>
         .container {
             background-color: #fff;
@@ -95,21 +96,67 @@
             <input type="submit" value="Submit">
         </form>
     </div>
-    <script>
-        document.getElementById('bug-report-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting the traditional way
-            const banner = document.getElementById('form-banner');
-            const form = document.getElementById('bug-report-form');
-            banner.style.display = 'block'; // Show the banner
-            banner.classList.add('show'); // Add the class to slide in the banner
-            setTimeout(() => {
-                banner.classList.remove('show'); // Remove the class to slide out the banner
-                setTimeout(() => {
-                    banner.style.display = 'none'; // Hide the banner after the slide out
-                }, 500); // Match the transition duration
-            }, 3000); // Display the banner for 3 seconds
-            form.reset(); // Reset the form fields
-        });
-    </script>
+
 </body>
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('bug-report-form');
+    const banner = document.getElementById('form-banner');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            'bug-description': formData.get('bug-description')
+        };
+        console.log(data);
+
+        // Get CSRF token from meta tag or other source
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+
+        fetch('/api/admin/submit-bug-report', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'CSRF-Token': csrfToken // Include CSRF token in headers
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(result => {
+            if (result.success) {
+                banner.textContent = 'Form Submitted Successfully';
+                banner.classList.add('show');
+                setTimeout(() => {
+                    banner.classList.remove('show');
+                }, 3000);
+            } else {
+                banner.textContent = 'Form Submission Failed';
+                banner.classList.add('show');
+                setTimeout(() => {
+                    banner.classList.remove('show');
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            banner.textContent = 'Form Submission Failed';
+            banner.classList.add('show');
+            setTimeout(() => {
+                banner.classList.remove('show');
+            }, 3000);
+        });
+    });
+});
+</script>
 </html>
