@@ -90,7 +90,7 @@ describe('Admin Controllers', () => {
 	it('should load admin dashboard with bug-logs', async () => {
 		await groups.join('administrators', adminUid);
 		const dashboards = [
-			'/admin', '/admin/dashboard/logins', '/admin/dashboard/users', '/admin/dashboard/topics', '/admin/dashboard/searches', 'admin/dashboard/bug-logs',
+			'/admin', '/admin/dashboard/logins', '/admin/dashboard/users', '/admin/dashboard/topics', '/admin/dashboard/searches', '/admin/dashboard/bug-logs',
 		];
 		await async.each(dashboards, async (url) => {
 			const { response, body } = await request.get(`${nconf.get('url')}${url}`, { jar: jar });
