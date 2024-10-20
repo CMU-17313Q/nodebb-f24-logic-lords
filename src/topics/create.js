@@ -14,6 +14,7 @@ const posts = require('../posts');
 const privileges = require('../privileges');
 const categories = require('../categories');
 const translator = require('../translator');
+const filteringSys = require('../filters');
 
 module.exports = function (Topics) {
 	Topics.create = async function (data) {
@@ -91,10 +92,17 @@ module.exports = function (Topics) {
 		data.title = String(data.title).trim();
 		data.tags = data.tags || [];
 		data.content = String(data.content || '').trimEnd();
+
+		if (filterInappropriateWords(data.title)) {
+			throw new Error('Your title contains inappropriate words, please update it accordingly');
+		}
+		if (filterInappropriateWords(data.content)) {
+			throw new Error('Your post contains inappropriate words, please update it accordingly');
+		}
+
 		if (!isAdmin) {
 			Topics.checkTitle(data.title);
 		}
-
 		await Topics.validateTags(data.tags, data.cid, uid);
 		data.tags = await Topics.filterTags(data.tags, data.cid);
 		if (!data.fromQueue && !isAdmin) {
@@ -183,6 +191,10 @@ module.exports = function (Topics) {
 		await guestHandleValid(data);
 		data.content = String(data.content || '').trimEnd();
 
+		if (filterInappropriateWords(data.content)) {
+			throw new Error('Your reply contains inappropriate words, please update it accordingly');
+		}
+
 		if (!data.fromQueue && !isAdmin) {
 			await user.isReadyToPost(uid, data.cid);
 			Topics.checkContent(data.content);
@@ -190,7 +202,6 @@ module.exports = function (Topics) {
 				throw new Error(`[[error:not-enough-reputation-to-post-links, ${meta.config['min:rep:post-links']}]]`);
 			}
 		}
-
 		// For replies to scheduled topics, don't have a timestamp older than topic's itself
 		if (topicData.scheduled) {
 			data.timestamp = topicData.lastposttime + 1;
@@ -257,6 +268,11 @@ module.exports = function (Topics) {
 		postData.topic.title = String(postData.topic.title);
 
 		return postData;
+	}
+
+	function filterInappropriateWords(content) {
+		const inappropriateWords = filteringSys.getInappropriateWords();
+		return inappropriateWords.some(word => content.toLowerCase().includes(word));
 	}
 
 	Topics.checkTitle = function (title) {
