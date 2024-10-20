@@ -25,6 +25,7 @@ Then, you can install NodeBB by following the below installation instructions ba
 ### Posting Anonymously
 
 ### Content Filtering
+To use content filtering, go to any of the four interaction pages in NodeBB: Announcements, General Discussion, Comments & Feedback, or Blogs. When creating a new topic, if your title or message contains any inappropriate words from our predefined list (e.g., 'stupid' or 'dammit'), a warning message will appear, stating: "Your title/message contains inappropriate words, please update it accordingly." You will not be able to submit your message until the inappropriate words are removed. Similarly, if you reply to a post with inappropriate words in your message, a warning message will appear, and you will be unable to send your reply until it is corrected.
 
 ### Bug Reporting and Bug Log
 To use the bug reporting feature, users should navigate to the bug report form by clicking on the "Report Bug" button, which can be found on the left side bar and is visible on all pages (excluding the Admin page). After clicking on this button, users will be directed to a form which they will need to fill out with their name, email address, and a description of the bug they encountered. After filling out the form, users should click the "Submit" button to send their report. The form will validate the inputs to ensure all required fields are filled correctly, including a valid email address. 
