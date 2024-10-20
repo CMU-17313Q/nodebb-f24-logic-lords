@@ -12,6 +12,11 @@ NodeBB requires the following software to be installed:
 - If you are using clustering you need Redis installed and configured.
 - nginx, version 1.3.13 or greater (only if intending to use nginx to proxy requests to a NodeBB
 
+Then, you can install NodeBB by following the below installation instructions based on your computer's operating system, but instead of cloning the class repository you should clone [this](https://github.com/CMU-17313Q/nodebb-f24-logic-lords) one:
+- [Mac](https://cmu-17313q.github.io/projects/P1/installation/mac/)
+- [Windows](https://cmu-17313q.github.io/projects/P1/installation/windows/)
+- [Ubuntu (Linux)](https://cmu-17313q.github.io/projects/P1/installation/ubuntu/)
+
 
 ---
 
