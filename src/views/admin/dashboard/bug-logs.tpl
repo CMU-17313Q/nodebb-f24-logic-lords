@@ -10,7 +10,7 @@
             <th>Timestamp</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="bug-logs-container">
           <!-- Use Benchpress syntax for iteration -->
           {{{ if !bugs.length }}}
           <tr>
@@ -19,10 +19,10 @@
           {{{ end }}}
           {{{ each bugs }}}
           <tr>
-            <td><!-- IMPORT bugs.title --></td>
-            <td><!-- IMPORT bugs.description --></td>
-            <td><!-- IMPORT bugs.status --></td>
-            <td><!-- IMPORT bugs.timestamp --></td>
+            <td>{{title}}</td>
+            <td>{{description}}</td>
+            <td>{{status}}</td>
+            <td>{{timestamp}}</td>
           </tr>
           {{{ end }}}
         </tbody>
