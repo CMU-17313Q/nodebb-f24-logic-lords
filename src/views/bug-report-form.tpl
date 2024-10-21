@@ -93,69 +93,74 @@
             <label for="bug-description">Bug Description:</label>
             <textarea id="bug-description" name="bug-description" rows="4" required></textarea>
 
+            <input type="hidden" name="csrf_token" value="{config.csrf_token}" />
             <input type="submit" value="Submit">
         </form>
     </div>
 
-</body>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('bug-report-form');
-    const banner = document.getElementById('form-banner');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('bug-report-form');
+            const banner = document.getElementById('form-banner');
 
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
 
-        const formData = new FormData(form);
-        const data = {
-            name: formData.get('name'),
-            email: formData.get('email'),
-            'bug-description': formData.get('bug-description')
-        };
-        console.log(data);
+                const formData = new FormData(form);
+                const data = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    'bug-description': formData.get('bug-description')
+                };
+                console.log(data);
 
-        // Get CSRF token from meta tag or other source
-        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
-        const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+                // Get CSRF token from the hidden input
+                const csrfTokenInput = event.target.querySelector('input[name="csrf_token"]');
+                if (!csrfTokenInput) {
+                    console.error('CSRF token input not found');
+                    return;
+                }
+                const csrfToken = csrfTokenInput.value;
 
-        fetch('/api/admin/submit-bug-report', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'CSRF-Token': csrfToken // Include CSRF token in headers
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(result => {
-            if (result.success) {
-                banner.textContent = 'Form Submitted Successfully';
-                banner.classList.add('show');
-                setTimeout(() => {
-                    banner.classList.remove('show');
-                }, 3000);
-            } else {
-                banner.textContent = 'Form Submission Failed';
-                banner.classList.add('show');
-                setTimeout(() => {
-                    banner.classList.remove('show');
-                }, 3000);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            banner.textContent = 'Form Submission Failed';
-            banner.classList.add('show');
-            setTimeout(() => {
-                banner.classList.remove('show');
-            }, 3000);
+                fetch('/api/admin/submit-bug-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-csrf-token': csrfToken // Include the CSRF token in the request headers
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        banner.textContent = 'Form Submitted Successfully';
+                        banner.classList.add('show');
+                        setTimeout(() => {
+                            banner.classList.remove('show');
+                        }, 3000);
+                    } else {
+                        banner.textContent = 'Form Submission Failed';
+                        banner.classList.add('show');
+                        setTimeout(() => {
+                            banner.classList.remove('show');
+                        }, 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    banner.textContent = 'Form Submission Failed';
+                    banner.classList.add('show');
+                    setTimeout(() => {
+                        banner.classList.remove('show');
+                    }, 3000);
+                });
+            });
         });
-    });
-});
-</script>
+    </script>
+</body>
 </html>

@@ -69,12 +69,12 @@ function apiRoutes(router, name, middleware, controllers) {
 	router.get(`/api/${name}/advanced/cache/dump`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.cache.dump));
 
 	router.get(`/api/${name}/get-bug-log`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.dashboard.getBugLogs));
-	router.post(`/api/${name}/submit-bug-report`, middleware.ensureLoggedIn, helpers.tryRoute(controllers.admin.dashboard.submitBugReport));
-
+	
 	const multipart = require('connect-multiparty');
 	const multipartMiddleware = multipart();
 
 	const middlewares = [multipartMiddleware, middleware.validateFiles, middleware.applyCSRF, middleware.ensureLoggedIn];
+	router.post(`/api/${name}/submit-bug-report`, [middleware.applyCSRF, middleware.ensureLoggedIn], helpers.tryRoute(controllers.admin.dashboard.submitBugReport));
 
 	router.post(`/api/${name}/category/uploadpicture`, middlewares, helpers.tryRoute(controllers.admin.uploads.uploadCategoryPicture));
 	router.post(`/api/${name}/uploadfavicon`, middlewares, helpers.tryRoute(controllers.admin.uploads.uploadFavicon));
