@@ -414,6 +414,7 @@ dashboardController.getBugLogs = async function (req, res) {
 dashboardController.submitBugReport = async function (req, res) {
 	try {
 		console.log('Request body:', req.body); // Log the request body for debugging
+		console.log('Request user:', req.user); // Log the user for debugging
 		const { 'bug-description': description } = req.body;
 		if (!description) {
 			return res.status(400).json({ message: 'Description is required' });
@@ -421,7 +422,7 @@ dashboardController.submitBugReport = async function (req, res) {
 
 		const sanitizedDescription = validator.escape(description);
 		const timestamp = Date.now();
-		const user = req.user ? req.user.username : 'Anonymous'; // Assuming req.user contains the user information
+		const user = email ? email : 'Anonymous'; // Assuming req.user contains the user information
 
 		// Add the bug report to the in-memory array
 		bugLogs.push({ user, description: sanitizedDescription, timestamp });
