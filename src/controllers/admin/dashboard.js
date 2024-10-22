@@ -422,7 +422,7 @@ dashboardController.submitBugReport = async function (req, res) {
 
 		const sanitizedDescription = validator.escape(description);
 		const timestamp = Date.now();
-		const user = email ? email : 'Anonymous'; // Assuming req.user contains the user information
+		const user = req.user ? req.user.username : 'Anonymous'; // Assuming req.user contains the user information
 
 		// Add the bug report to the in-memory array
 		bugLogs.push({ user, description: sanitizedDescription, timestamp });
