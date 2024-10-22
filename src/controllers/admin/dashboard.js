@@ -413,7 +413,8 @@ dashboardController.getBugLogs = async function (req, res) {
 
 dashboardController.submitBugReport = async function (req, res) {
 	try {
-		const { description } = req.body;
+		console.log('Request body:', req.body); // Log the request body for debugging
+		const { 'bug-description': description } = req.body;
 		if (!description) {
 			return res.status(400).json({ message: 'Description is required' });
 		}
