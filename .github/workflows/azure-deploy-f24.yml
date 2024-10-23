@@ -19,7 +19,7 @@ jobs:
       ./.github/workflows/test.yaml
 
   build-and-deploy:
-    if: github.repository == 'cmu-313/NodeBB'
+    if: github.repository == 'CMU-17313Q/nodebb-f24-logic-lords'
     needs: lint-and-test
 
     runs-on: ubuntu-latest
