@@ -50,5 +50,5 @@ jobs:
         with:
           app-name: 'nodebb-Logic-Lords'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BFAB97B1AB1441ACA7C63280F91AD3F3 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_881BB99C03D242D38887A5B46C8A0B12 }}
           package: .
