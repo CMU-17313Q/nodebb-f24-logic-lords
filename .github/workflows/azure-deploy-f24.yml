@@ -48,7 +48,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'nodebb-f24'
+          app-name: 'nodebb-Logic-Lords'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BFAB97B1AB1441ACA7C63280F91AD3F3 }}
           package: .
