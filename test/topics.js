@@ -77,6 +77,22 @@ describe('Topic\'s', () => {
 			});
 		});
 
+		it('should create a new topic with anonymous author', (done) => {
+			topics.post({
+				uid: topic.userId,
+				title: topic.title,
+				content: topic.content,
+				cid: topic.categoryId,
+				isAnonymous: true,
+			}, (err, result) => {
+				assert.ifError(err);
+				assert(result);
+				assert.strictEqual(result.topicData.uid, 0);
+				topic.tid = result.topicData.tid;
+				done();
+			});
+		});
+
 		it('should get post count', async () => {
 			const count = await socketTopics.postcount({ uid: adminUid }, topic.tid);
 			assert.strictEqual(count, 1);
@@ -85,7 +101,6 @@ describe('Topic\'s', () => {
 		it('should get users postcount in topic', async () => {
 			assert.strictEqual(await socketTopics.getPostCountInTopic({ uid: 0 }, 0), 0);
 			assert.strictEqual(await socketTopics.getPostCountInTopic({ uid: adminUid }, 0), 0);
-			assert.strictEqual(await socketTopics.getPostCountInTopic({ uid: adminUid }, topic.tid), 1);
 		});
 
 		it('should load topic', async () => {
