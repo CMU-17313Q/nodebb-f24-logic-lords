@@ -15,6 +15,10 @@ permissions:
   contents: read  # for actions/checkout to fetch code
 
 jobs:
+  flow:
+      uses:
+        ./.github/workflows/flow.yml
+
   test:
     runs-on: ubuntu-latest
     env:
