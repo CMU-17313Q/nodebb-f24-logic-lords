@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - f24
+  workflow_call:
   workflow_dispatch:
 
 jobs:
