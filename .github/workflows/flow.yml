@@ -15,15 +15,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - run: cp install/package.json package.json
+
     - name: Install Node
       uses: actions/setup-node@v4
       with:
         node-version: 20
 
-    - name: NPM Install
-      uses: bahmutov/npm-install@v1
-      with:
-        useLockFile: false
+    - name: Install dependencies
+      run: npm install
 
     - name: Install Flow
       run: npm install --save-dev flow-bin
