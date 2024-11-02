@@ -26,5 +26,8 @@ jobs:
     - name: Install Flow
       run: npm install --save-dev flow-bin
 
+    - name: Initialize Flow
+      run: npx flow init
+
     - name: Run Flow
       run: npx flow
