@@ -1,6 +1,4 @@
 [options]
-; Check all files, not just those with @flow comments
-all=true
 ; Enable IDE autocomplete for imports
 autoimports=true
 ; Treat object types as exact by default
