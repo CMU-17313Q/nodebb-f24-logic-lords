@@ -11,7 +11,7 @@ include_warnings=true
 lazy_mode=true
 
 [ignore]
-node_modules/
+<PROJECT_ROOT>/node_modules
 
 [lints]
 ; Warn about potentially unsafe null checks
