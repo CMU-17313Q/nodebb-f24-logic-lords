@@ -10,6 +10,9 @@ include_warnings=true
 ; Improve performance on large codebases
 lazy_mode=true
 
+[ignore]
+node_modules/
+
 [lints]
 ; Warn about potentially unsafe null checks
 sketchy-null=warn
