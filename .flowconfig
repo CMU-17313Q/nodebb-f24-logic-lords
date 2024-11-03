@@ -1,0 +1,26 @@
+[options]
+; Check all files, not just those with @flow comments
+all=true
+; Enable IDE autocomplete for imports
+autoimports=true
+; Treat object types as exact by default
+exact_by_default=true
+; Include warnings in the error output
+include_warnings=true
+; Improve performance on large codebases
+lazy_mode=true
+
+[lints]
+; Warn about potentially unsafe null checks
+sketchy-null=warn
+; Throw an error if a type import is untyped
+untyped-type-import=error
+
+[strict]
+nonstrict-import
+sketchy-null-number
+sketchy-null-string
+sketchy-null-mixed
+unclear-type
+untyped-import
+untyped-type-import
