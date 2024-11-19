@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bug Report Form</title>
+    <meta name="csrf-token" content="{{csrfToken}}">
     <style>
         .container {
             background-color: #fff;
@@ -92,23 +93,73 @@
             <label for="bug-description">Bug Description:</label>
             <textarea id="bug-description" name="bug-description" rows="4" required></textarea>
 
+            <input type="hidden" name="csrf_token" value="{config.csrf_token}" />
             <input type="submit" value="Submit">
         </form>
     </div>
+
     <script>
-        document.getElementById('bug-report-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting the traditional way
-            const banner = document.getElementById('form-banner');
+        document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('bug-report-form');
-            banner.style.display = 'block'; // Show the banner
-            banner.classList.add('show'); // Add the class to slide in the banner
-            setTimeout(() => {
-                banner.classList.remove('show'); // Remove the class to slide out the banner
-                setTimeout(() => {
-                    banner.style.display = 'none'; // Hide the banner after the slide out
-                }, 500); // Match the transition duration
-            }, 3000); // Display the banner for 3 seconds
-            form.reset(); // Reset the form fields
+            const banner = document.getElementById('form-banner');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const data = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    'bug-description': formData.get('bug-description')
+                };
+                console.log(data);
+
+                // Get CSRF token from the hidden input
+                const csrfTokenInput = event.target.querySelector('input[name="csrf_token"]');
+                if (!csrfTokenInput) {
+                    console.error('CSRF token input not found');
+                    return;
+                }
+                const csrfToken = csrfTokenInput.value;
+
+                fetch('/api/admin/submit-bug-report', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-csrf-token': csrfToken // Include the CSRF token in the request headers
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.success) {
+                        banner.textContent = 'Form Submitted Successfully';
+                        banner.classList.add('show');
+                        setTimeout(() => {
+                            banner.classList.remove('show');
+                        }, 3000);
+                    } else {
+                        banner.textContent = 'Form Submission Failed';
+                        banner.classList.add('show');
+                        setTimeout(() => {
+                            banner.classList.remove('show');
+                        }, 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    banner.textContent = 'Form Submission Failed';
+                    banner.classList.add('show');
+                    setTimeout(() => {
+                        banner.classList.remove('show');
+                    }, 3000);
+                });
+            });
         });
     </script>
 </body>
