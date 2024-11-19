@@ -1,3 +1,4 @@
+src/views/admin/dashboard/bug-logs.tpl
 <div class="row dashboard px-lg-4">
   <div class="col-12">
     <div class="table-responsive">
